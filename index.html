@@ -1028,20 +1028,17 @@
         }
         .asr-row.selected { background: #e6f7ff; border-color: #1890ff; box-shadow: 0 0 0 2px rgba(24,144,255,0.15); }
         .asr-row .row-check {
-            width: 16px; height: 16px; flex-shrink: 0; cursor: pointer;
-            display: flex; align-items: center; justify-content: center;
-            transition: all .15s; margin-top: 2px;
+            width: 14px; height: 14px; border: 1.5px solid #d9d9d9; border-radius: 3px;
+            flex-shrink: 0; cursor: pointer;
+            background: #fff; transition: all .15s; margin-top: 2px;
+            position: relative;
         }
-        .asr-row .row-check::before {
-            content: ''; width: 14px; height: 14px; border: 1.5px solid #d9d9d9; border-radius: 3px;
-            background: #fff; transition: all .15s;
-        }
-        .asr-row.selected .row-check::before { background: #1890ff; border-color: #1890ff; }
         .asr-row .row-check::after {
-            content: ''; width: 8px; height: 4px; border-left: 2px solid #fff; border-bottom: 2px solid #fff;
-            transform: rotate(-45deg) translateY(-1px); opacity: 0;
-            position: absolute;
+            content: ''; position: absolute; left: 2px; top: 3px;
+            width: 8px; height: 4px; border-left: 2px solid #fff; border-bottom: 2px solid #fff;
+            transform: rotate(-45deg); opacity: 0;
         }
+        .asr-row.selected .row-check { background: #1890ff; border-color: #1890ff; }
         .asr-row.selected .row-check::after { opacity: 1; }
         .asr-row:hover { background: #f0f9ff; border-color: #91d5ff; }
         .asr-row:hover::after {
@@ -1147,20 +1144,17 @@
         }
         .ocr-row.selected { background: #e6f7ff; border-color: #1890ff; box-shadow: 0 0 0 2px rgba(24,144,255,0.15); }
         .ocr-row .row-check {
-            width: 16px; height: 16px; flex-shrink: 0; cursor: pointer;
-            display: flex; align-items: center; justify-content: center;
-            transition: all .15s; margin-top: 2px;
+            width: 14px; height: 14px; border: 1.5px solid #d9d9d9; border-radius: 3px;
+            flex-shrink: 0; cursor: pointer;
+            background: #fff; transition: all .15s; margin-top: 2px;
+            position: relative;
         }
-        .ocr-row .row-check::before {
-            content: ''; width: 14px; height: 14px; border: 1.5px solid #d9d9d9; border-radius: 3px;
-            background: #fff; transition: all .15s;
-        }
-        .ocr-row.selected .row-check::before { background: #1890ff; border-color: #1890ff; }
         .ocr-row .row-check::after {
-            content: ''; width: 8px; height: 4px; border-left: 2px solid #fff; border-bottom: 2px solid #fff;
-            transform: rotate(-45deg) translateY(-1px); opacity: 0;
-            position: absolute;
+            content: ''; position: absolute; left: 2px; top: 3px;
+            width: 8px; height: 4px; border-left: 2px solid #fff; border-bottom: 2px solid #fff;
+            transform: rotate(-45deg); opacity: 0;
         }
+        .ocr-row.selected .row-check { background: #1890ff; border-color: #1890ff; }
         .ocr-row.selected .row-check::after { opacity: 1; }
         .ocr-row:hover { background: #f0f9ff; border-color: #91d5ff; }
         .ocr-row:hover::after {
