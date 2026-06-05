@@ -770,8 +770,10 @@
             line-height: 1.5;
             font-family: inherit;
         }
-        .annot-card.editing .reason-row .edit-icon {
-            display: inline-flex !important;
+        .annot-card.editing .reason-row .edit-icon:not(.deco-icon) {
+            display: none !important;
+        }
+        .annot-card.editing .reason-row .deco-icon {
             color: #bfae60;
             font-size: 15px;
             cursor: default;
