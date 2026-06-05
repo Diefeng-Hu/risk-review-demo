@@ -3143,19 +3143,21 @@
                 const tB = (b.querySelector('.ts')?.textContent || '00:00').trim();
                 return tA.localeCompare(tB);
             });
-            // 提取各段时间范围
-            const timeRanges = sorted.map(r => {
+            // 提取各段时间范围：每段用 "起始-结束" 格式
+            const timeRanges = sorted.map((r, i) => {
                 const ts = (r.querySelector('.ts')?.textContent || '00:00').trim();
-                // 如果行有 data-card，尝试从对应卡片获取结束时间
+                // 如果行有 data-card，从对应卡片取完整时间段
                 const cardId = r.dataset.card;
                 if (cardId) {
                     const card = document.querySelector(`[data-id="${cardId}"]`);
                     const cardTime = card?.querySelector('.card-time')?.textContent?.replace(/[▶\s]/g, '') || '';
-                    // cardTime 可能是 "00:01-00:07" 或 "00:01-00:07；00:15-00:20" 多段
-                    return cardTime || ts;
+                    if (cardTime) return cardTime;
                 }
-                // 无关联卡片，用单时间点
-                return ts;
+                // 无关联卡片：用本行起始时间 + 下一行起始时间作为结束时间
+                // 最后一行无下一行时，结束时间 = 起始时间（单点范围）
+                const nextRow = sorted[i + 1];
+                const endTs = nextRow ? (nextRow.querySelector('.ts')?.textContent || '00:00').trim() : ts;
+                return `${ts}-${endTs}`;
             });
             // 用全角分号拼接多段时间
             const combinedTime = timeRanges.join('；');
