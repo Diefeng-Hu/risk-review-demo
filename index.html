@@ -167,45 +167,17 @@
 
         /* 左侧栏：默认折叠，hover 展开，释放横向空间给主区 */
         .left-panel {
-            width: 48px;
-            min-width: 48px;
+            width: 232px;
+            min-width: 232px;
             background: #fff;
             border-right: 1px solid #eaedf2;
-            padding: 16px 8px;
+            padding: 16px 14px;
             flex-shrink: 0;
-            overflow: hidden;
-            transition: width .25s ease, padding .25s ease, min-width .25s ease;
+            overflow-y: auto;
             position: relative;
             z-index: 10;
         }
-        .left-panel:hover,
-        .left-panel.expanded {
-            width: 232px;
-            min-width: 232px;
-            padding: 16px 14px;
-            overflow-y: auto;
-            box-shadow: 4px 0 18px rgba(15,23,42,0.06);
-        }
-        .left-panel .collapse-icon {
-            position: absolute;
-            top: 14px; left: 50%;
-            transform: translateX(-50%);
-            width: 28px; height: 28px;
-            display: flex; align-items: center; justify-content: center;
-            color: #94a3b8;
-            font-size: 14px;
-            border-radius: 6px;
-            background: #f6f8fb;
-            transition: opacity .2s;
-        }
-        .left-panel:hover .collapse-icon,
-        .left-panel.expanded .collapse-icon { opacity: 0; pointer-events: none; }
-        .left-panel > *:not(.collapse-icon) {
-            opacity: 0;
-            transition: opacity .2s .1s;
-        }
-        .left-panel:hover > *:not(.collapse-icon),
-        .left-panel.expanded > *:not(.collapse-icon) { opacity: 1; }
+
         .panel-title {
             font-size: 12px;
             font-weight: 600;
@@ -335,6 +307,9 @@
             height: 100%;
             position: relative;
         }
+        .video-container video {
+            width: 100%; height: 100%; object-fit: contain; display: block; background: #000;
+        }
         .video-container img {
             width: 100%; height: 100%; object-fit: contain; display: block; background: #000;
         }
@@ -357,6 +332,7 @@
             display: flex;
             flex-direction: column;
             gap: 8px;
+            z-index: 10;
         }
         .video-controls .row {
             display: flex; align-items: center; gap: 10px;
@@ -405,13 +381,14 @@
             position: absolute; left: 0; top: 0; bottom: 0;
             background: rgba(255,255,255,.85);
             border-radius: 3px;
-            width: 8%;
+            width: 0%;
             mix-blend-mode: overlay;
             pointer-events: none;
+            transition: width 0.1s linear;
         }
         .video-progress .vp-thumb {
             position: absolute;
-            top: 50%; left: 8%;
+            top: 50%; left: 0%;
             transform: translate(-50%, -50%);
             width: 12px; height: 12px;
             background: #fff;
@@ -419,6 +396,7 @@
             box-shadow: 0 1px 4px rgba(0,0,0,.5), 0 0 0 2px rgba(24,144,255,.6);
             z-index: 3;
             pointer-events: none;
+            transition: left 0.1s linear;
         }
         .play-btn-mini {
             width: 22px; height: 22px;
@@ -989,6 +967,25 @@
             border-color: #1890ff;
             color: #1890ff;
         }
+        .quick-tag.combine {
+            background: #fffbe6;
+            border-color: #ffd666;
+            color: #d46b08;
+        }
+        .quick-tag.combine:hover, .quick-tag.combine.active {
+            background: #fff1b8;
+            border-color: #faad14;
+            color: #ad4e00;
+        }
+        .btn-success {
+            background: #52c41a;
+            color: #fff;
+            border: 1px solid #52c41a;
+        }
+        .btn-success:hover {
+            background: #73d13d;
+            border-color: #73d13d;
+        }
         .expand-toggle {
             display: inline-flex; align-items: center; gap: 4px;
             font-size: 11px; color: #1890ff;
@@ -1029,9 +1026,21 @@
             cursor: pointer; user-select: none;
             position: relative;
         }
+        .asr-row.selected { background: #e6f7ff; border-color: #1890ff; box-shadow: 0 0 0 2px rgba(24,144,255,0.15); }
+        .asr-row .row-check {
+            width: 16px; height: 16px; border: 1.5px solid #d9d9d9; border-radius: 3px;
+            flex-shrink: 0; cursor: pointer; display: flex; align-items: center; justify-content: center;
+            background: #fff; transition: all .15s; margin-top: 2px;
+        }
+        .asr-row .row-check::after {
+            content: ''; width: 8px; height: 4px; border-left: 2px solid #fff; border-bottom: 2px solid #fff;
+            transform: rotate(-45deg) translateY(-1px); opacity: 0;
+        }
+        .asr-row.selected .row-check { background: #1890ff; border-color: #1890ff; }
+        .asr-row.selected .row-check::after { opacity: 1; }
         .asr-row:hover { background: #f0f9ff; border-color: #91d5ff; }
         .asr-row:hover::after {
-            content: '点击操作 →';
+            content: '多选 →';
             position: absolute; right: 8px; top: 50%; transform: translateY(-50%);
             font-size: 10px; color: #1890ff; opacity: .7; pointer-events: none;
         }
@@ -1131,15 +1140,44 @@
             transition: background .15s, border-color .15s;
             position: relative;
         }
+        .ocr-row.selected { background: #e6f7ff; border-color: #1890ff; box-shadow: 0 0 0 2px rgba(24,144,255,0.15); }
+        .ocr-row .row-check {
+            width: 16px; height: 16px; border: 1.5px solid #d9d9d9; border-radius: 3px;
+            flex-shrink: 0; cursor: pointer; display: flex; align-items: center; justify-content: center;
+            background: #fff; transition: all .15s; margin-top: 2px;
+        }
+        .ocr-row .row-check::after {
+            content: ''; width: 8px; height: 4px; border-left: 2px solid #fff; border-bottom: 2px solid #fff;
+            transform: rotate(-45deg) translateY(-1px); opacity: 0;
+        }
+        .ocr-row.selected .row-check { background: #1890ff; border-color: #1890ff; }
+        .ocr-row.selected .row-check::after { opacity: 1; }
         .ocr-row:hover { background: #f0f9ff; border-color: #91d5ff; }
         .ocr-row:hover::after {
-            content: '点击操作 →';
+            content: '多选 →';
             position: absolute; right: 8px; top: 50%; transform: translateY(-50%);
             font-size: 10px; color: #1890ff; opacity: .7; pointer-events: none;
         }
         .ocr-row.violation { background: #fff1f0; border-color: #ffa39e; }
         .ocr-row.violation:hover { background: #ffe0de; }
         .ocr-row.violation:hover::after { color: #ff4d4f; }
+
+        /* 多选操作栏 */
+        .multi-select-bar {
+            position: fixed; bottom: 50px; left: 50%; transform: translateX(-50%);
+            background: #fff; border: 1px solid #1890ff; border-radius: 10px;
+            box-shadow: 0 6px 20px rgba(24,144,255,0.2);
+            padding: 8px 16px; display: flex; align-items: center; gap: 12px;
+            z-index: 9998; font-size: 12px;
+        }
+        .multi-select-bar .ms-count { color: #1890ff; font-weight: 600; }
+        .multi-select-bar .ms-btn {
+            padding: 4px 12px; border-radius: 6px; font-size: 12px; cursor: pointer; border: none;
+        }
+        .multi-select-bar .ms-merge { background: #1890ff; color: #fff; }
+        .multi-select-bar .ms-merge:hover { background: #096dd9; }
+        .multi-select-bar .ms-clear { background: #f0f0f0; color: #666; }
+        .multi-select-bar .ms-clear:hover { background: #e0e0e0; }
         .ocr-row .ts {
             color: #1890ff; font-family: 'SF Mono', Monaco, monospace;
             font-size: 11px; flex-shrink: 0;
@@ -1279,6 +1317,7 @@
         <button class="btn">打卡</button>
         <button class="btn">签出</button>
         <button class="btn">□ 挂起</button>
+        <button class="btn btn-success" id="pass-all-btn" style="padding:3px 12px;" title="整条视频无违规，整体通过（快捷键 A）">✓ 整条通过</button>
         <button class="btn btn-primary" style="padding:3px 12px;">✎ 审核 ›</button>
         <span class="top-icon" title="项目列表">📋</span>
         <span class="top-icon" title="通知">🔔</span>
@@ -1293,7 +1332,6 @@
     <div class="main-layout">
         <!-- 左侧：基本信息 -->
         <div class="left-panel">
-            <div class="collapse-icon" title="悬停展开">ℹ</div>
             <div class="panel-title">基本信息</div>
             <div class="info-row"><span class="info-label">客户名称</span><span class="info-value">长春市京起经贸有限公司</span></div>
             <div class="info-row"><span class="info-label">信用代码</span><span class="info-value">91220100MAED4YAW4K</span></div>
@@ -1330,14 +1368,14 @@
                     </div>
                     <div class="ref-side-section-body">
                         <div class="asr-full">
-                            <div class="asr-row"><span class="ts">00:00</span><span class="text">大家好，欢迎来到我的直播间。</span><span class="asr-tag">正常</span></div>
-                            <div class="asr-row violation" data-card="card-1"><span class="ts">00:01</span><span class="text">"你 <span class="hl" data-card="card-1">使使劲啊</span>，没有啥不可能的。<span class="hl" data-card="card-1">三十分钟都做不到</span>的"</span><span class="asr-tag">违规</span></div>
-                            <div class="asr-row"><span class="ts">00:08</span><span class="text">看我手上这款产品，纯天然无添加。</span><span class="asr-tag">正常</span></div>
-                            <div class="asr-row violation" data-card="card-4"><span class="ts">00:11</span><span class="text">我们这是 <span class="hl" data-card="card-4">浓缩特效型</span> 的，<span class="hl" data-card="card-4">谁用谁知道</span>。</span><span class="asr-tag">违规</span></div>
-                            <div class="asr-row"><span class="ts">00:18</span><span class="text">下面给大家简单介绍一下使用方法。</span><span class="asr-tag">正常</span></div>
-                            <div class="asr-row"><span class="ts">00:22</span><span class="text">放心拍，包邮到家。</span><span class="asr-tag">正常</span></div>
-                            <div class="asr-row violation" data-card="card-7"><span class="ts">00:26</span><span class="text">现在下单 <span class="hl" data-card="card-7">免费送</span>，<span class="hl" data-card="card-7">绝对最低价</span>，错过就没有了。</span><span class="asr-tag">违规</span></div>
-                            <div class="asr-row"><span class="ts">00:32</span><span class="text">感谢大家的支持，我们下次直播再见。</span><span class="asr-tag">正常</span></div>
+                            <div class="asr-row"><span class="row-check"></span><span class="ts">00:00</span><span class="text">大家好，欢迎来到我的直播间。</span><span class="asr-tag">正常</span></div>
+                            <div class="asr-row violation" data-card="card-1"><span class="row-check"></span><span class="ts">00:01</span><span class="text">"你 <span class="hl" data-card="card-1">使使劲啊</span>，没有啥不可能的。<span class="hl" data-card="card-1">三十分钟都做不到</span>的"</span><span class="asr-tag">违规</span></div>
+                            <div class="asr-row"><span class="row-check"></span><span class="ts">00:08</span><span class="text">看我手上这款产品，纯天然无添加。</span><span class="asr-tag">正常</span></div>
+                            <div class="asr-row violation" data-card="card-4"><span class="row-check"></span><span class="ts">00:11</span><span class="text">我们这是 <span class="hl" data-card="card-4">浓缩特效型</span> 的，<span class="hl" data-card="card-4">谁用谁知道</span>。</span><span class="asr-tag">违规</span></div>
+                            <div class="asr-row"><span class="row-check"></span><span class="ts">00:18</span><span class="text">下面给大家简单介绍一下使用方法。</span><span class="asr-tag">正常</span></div>
+                            <div class="asr-row"><span class="row-check"></span><span class="ts">00:22</span><span class="text">放心拍，包邮到家。</span><span class="asr-tag">正常</span></div>
+                            <div class="asr-row violation" data-card="card-7"><span class="row-check"></span><span class="ts">00:26</span><span class="text">现在下单 <span class="hl" data-card="card-7">免费送</span>，<span class="hl" data-card="card-7">绝对最低价</span>，错过就没有了。</span><span class="asr-tag">违规</span></div>
+                            <div class="asr-row"><span class="row-check"></span><span class="ts">00:32</span><span class="text">感谢大家的支持，我们下次直播再见。</span><span class="asr-tag">正常</span></div>
                         </div>
                     </div>
                 </div>
@@ -1351,11 +1389,11 @@
                     </div>
                     <div class="ref-side-section-body">
                         <div class="ocr-list">
-                            <div class="ocr-row"><span class="ts">00:02</span><span class="text">主播头像 / 直播间标题</span><span class="ocr-tag">正常</span></div>
-                            <div class="ocr-row violation" data-card="card-2"><span class="ts">00:05</span><span class="text">画面字幕："最低价直降，错过等一年"</span><span class="ocr-tag">违规</span></div>
-                            <div class="ocr-row"><span class="ts">00:12</span><span class="text">商品包装文字：浓缩配方</span><span class="ocr-tag">正常</span></div>
-                            <div class="ocr-row violation" data-card="card-5"><span class="ts">00:20</span><span class="text">弹幕水印："官方授权 全网最低"</span><span class="ocr-tag">违规</span></div>
-                            <div class="ocr-row"><span class="ts">00:28</span><span class="text">右下角 logo</span><span class="ocr-tag">正常</span></div>
+                            <div class="ocr-row"><span class="row-check"></span><span class="ts">00:02</span><span class="text">主播头像 / 直播间标题</span><span class="ocr-tag">正常</span></div>
+                            <div class="ocr-row violation" data-card="card-2"><span class="row-check"></span><span class="ts">00:05</span><span class="text">画面字幕："最低价直降，错过等一年"</span><span class="ocr-tag">违规</span></div>
+                            <div class="ocr-row"><span class="row-check"></span><span class="ts">00:12</span><span class="text">商品包装文字：浓缩配方</span><span class="ocr-tag">正常</span></div>
+                            <div class="ocr-row violation" data-card="card-5"><span class="row-check"></span><span class="ts">00:20</span><span class="text">弹幕水印："官方授权 全网最低"</span><span class="ocr-tag">违规</span></div>
+                            <div class="ocr-row"><span class="row-check"></span><span class="ts">00:28</span><span class="text">右下角 logo</span><span class="ocr-tag">正常</span></div>
                         </div>
                     </div>
                 </div>
@@ -1365,7 +1403,7 @@
             <div class="video-row">
                 <div class="video-block">
                     <div class="video-container">
-                        <img src="https://picsum.photos/seed/girl01/360/640" alt="视频">
+                        <img id="main-video-poster" src="https://picsum.photos/seed/girl01/360/640" alt="视频">
                         <div class="video-controls">
                             <div class="row row1">
                                 <button class="play-btn-mini">▶</button>
@@ -1440,6 +1478,7 @@
                                     <option selected>语音文字</option>
                                     <option>画面文字</option>
                                     <option>画面本身</option>
+                                    <option>视频异常</option>
                                 </select>
                             </div>
                             <div class="expand-row">
@@ -1462,6 +1501,9 @@
                                     <span class="quick-tag">疗效保证</span>
                                     <span class="quick-tag">夸大功效</span>
                                     <span class="quick-tag">软色情</span>
+                                    <span class="quick-tag combine">结合画面本身</span>
+                                    <span class="quick-tag combine">结合语音文字</span>
+                                    <span class="quick-tag combine">结合画面文字</span>
                                 </div>
                             </div>
                             <div class="expand-row">
@@ -1506,6 +1548,7 @@
                                     <option>语音文字</option>
                                     <option selected>画面文字</option>
                                     <option>画面本身</option>
+                                    <option>视频异常</option>
                                 </select>
                             </div>
                             <div class="expand-row">
@@ -1524,6 +1567,9 @@
                                     <span class="quick-tag active">暗示性服务</span>
                                     <span class="quick-tag">软色情</span>
                                     <span class="quick-tag">违法医疗</span>
+                                    <span class="quick-tag combine">结合画面本身</span>
+                                    <span class="quick-tag combine">结合语音文字</span>
+                                    <span class="quick-tag combine">结合画面文字</span>
                                 </div>
                             </div>
                             <div class="expand-row">
@@ -1567,6 +1613,7 @@
                                     <option>语音文字</option>
                                     <option>画面文字</option>
                                     <option selected>画面本身</option>
+                                    <option>视频异常</option>
                                 </select>
                             </div>
                             <div class="expand-row">
@@ -1575,6 +1622,9 @@
                                     <span class="quick-tag active">暗示元素</span>
                                     <span class="quick-tag">软色情</span>
                                     <span class="quick-tag">违规符号</span>
+                                    <span class="quick-tag combine">结合画面本身</span>
+                                    <span class="quick-tag combine">结合语音文字</span>
+                                    <span class="quick-tag combine">结合画面文字</span>
                                 </div>
                             </div>
                             <div class="expand-row">
@@ -1753,6 +1803,7 @@
                         <option ${type==='voice'?'selected':''}>语音文字</option>
                         <option ${type==='text'?'selected':''}>画面文字</option>
                         <option ${type==='scene'?'selected':''}>画面本身</option>
+                                    <option>视频异常</option>
                     </select>
                 </div>
                 <div class="expand-row">
@@ -1775,7 +1826,10 @@
                         <span class="quick-tag">疗效保证</span>
                         <span class="quick-tag">绝对化用语</span>
                         <span class="quick-tag">虚假赠送</span>
-                    </div>
+                                    <span class="quick-tag combine">结合画面本身</span>
+                                    <span class="quick-tag combine">结合语音文字</span>
+                                    <span class="quick-tag combine">结合画面文字</span>
+                                </div>
                 </div>
                 <div class="expand-row">
                     <span class="label">修改方向：</span>
@@ -1806,12 +1860,23 @@
             });
         });
 
-        // 2) 快捷标签互斥
+        // 2) 快捷标签 → 自动写入违规理由
         document.querySelectorAll('.quick-tags').forEach(tags => {
             tags.querySelectorAll('.quick-tag').forEach(tag => {
-                tag.addEventListener('click', () => {
+                tag.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    const card = tag.closest('.annot-card');
+                    // 互斥：同组内单选
                     tags.querySelectorAll('.quick-tag').forEach(t => t.classList.remove('active'));
                     tag.classList.add('active');
+                    // 自动填充违规理由
+                    if (card) {
+                        const reasonEl = card.querySelector('.reason-text, .reason-input');
+                        if (reasonEl) {
+                            reasonEl.textContent = tag.textContent.trim();
+                            showFloatToast(`✓ 违规理由：${tag.textContent.trim()}`);
+                        }
+                    }
                 });
             });
         });
@@ -1825,11 +1890,12 @@
                 }
                 document.querySelectorAll('.annot-card').forEach(c => c.classList.remove('focus-current'));
                 card.classList.add('focus-current');
-                // 自动跳转到该卡片的视频时间
+                // 自动跳转到该卡片的视频时间 + 进度条定位
                 const timeEl = card.querySelector('.card-time');
                 if (timeEl) {
-                    const timeText = timeEl.textContent.trim();
-                    showFloatToast(`⏯ 跳转到 ${timeText}`);
+                    const timeText = timeEl.textContent.trim().replace(/[▶\s]/g, '');
+                    seekVideoTo(timeText);
+                    showFloatToast(`⏯ 跳转到 ${timeEl.textContent.trim()}`);
                 }
             });
         });
@@ -1914,6 +1980,7 @@
                     }
                     inp.value = currentText;
                     inp.style.display = '';
+                    inp.placeholder = '格式：时间段：违规理由；时间段：违规理由  例如：1-3：暗示壮阳；1:32-1:34：夸大功效';
                     // 尾部展示铅笔图标（装饰，不可点击）
                     let decoIcon = reasonRow.querySelector('.deco-icon');
                     if (!decoIcon) {
@@ -2090,12 +2157,21 @@
             });
         });
 
-        // 顶部「通过」「拒绝」「提交」按钮
+        // 顶部「整条通过」「拒绝」「提交」按钮
+        document.getElementById('pass-all-btn')?.addEventListener('click', () => {
+            if (!confirm('确认整条视频无违规，整体通过？\n\n（操作后当前任务将标记为通过并进入下一题）')) return;
+            document.querySelectorAll('.annot-card').forEach(c => {
+                if (!c.classList.contains('confirmed') && !c.classList.contains('rejected')) {
+                    c.classList.add('rejected'); // 将所有未处理卡片视为剔除（即AI预标注误判）
+                }
+            });
+            showFloatToast('✓ 整条通过 — 已记录，即将进入下一题');
+            renderVideoSegments?.();
+            showProgress?.();
+        });
         document.querySelectorAll('.top-bar .btn').forEach(btn => {
             const txt = btn.textContent.trim();
-            if (txt.startsWith('通过')) {
-                btn.addEventListener('click', () => showFloatToast('✓ 当前任务已整体通过'));
-            } else if (txt.startsWith('拒绝')) {
+            if (txt.startsWith('拒绝')) {
                 btn.addEventListener('click', () => showFloatToast('✗ 当前任务已整体拒绝'));
             } else if (txt.startsWith('提交')) {
                 btn.addEventListener('click', () => {
@@ -2106,30 +2182,65 @@
             }
         });
 
-        // 视频播放/暂停
+        // 视频模拟播放 + 进度条跳转
+        const TOTAL_SECONDS = 34;
+        let simulatedTime = 0; // 当前模拟秒数
         let isPlaying = false;
+        let playTimer = null;
+
+        function updateProgressUI(timeSec) {
+            simulatedTime = Math.max(0, Math.min(TOTAL_SECONDS, timeSec));
+            const m = Math.floor(simulatedTime / 60);
+            const s = Math.floor(simulatedTime % 60);
+            const tc = document.getElementById('time-current');
+            if (tc) tc.textContent = `${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
+            const pct = (simulatedTime / TOTAL_SECONDS * 100);
+            const fill = document.getElementById('vp-fill');
+            const thumb = document.getElementById('vp-thumb');
+            if (fill) fill.style.width = pct + '%';
+            if (thumb) thumb.style.left = pct + '%';
+        }
+
+        function startSimulatedPlay() {
+            if (playTimer) return;
+            isPlaying = true;
+            const btn = document.querySelector('.play-btn-mini');
+            if (btn) btn.textContent = '⏸';
+            playTimer = setInterval(() => {
+                simulatedTime += 1;
+                if (simulatedTime >= TOTAL_SECONDS) {
+                    simulatedTime = TOTAL_SECONDS;
+                    stopSimulatedPlay();
+                }
+                updateProgressUI(simulatedTime);
+            }, 1000);
+            showFloatToast('▶ 播放');
+        }
+
+        function stopSimulatedPlay() {
+            isPlaying = false;
+            if (playTimer) { clearInterval(playTimer); playTimer = null; }
+            const btn = document.querySelector('.play-btn-mini');
+            if (btn) btn.textContent = '▶';
+            showFloatToast('⏸ 暂停');
+        }
+
         document.querySelector('.play-btn-mini')?.addEventListener('click', e => {
             e.stopPropagation();
-            isPlaying = !isPlaying;
-            e.target.textContent = isPlaying ? '⏸' : '▶';
-            showFloatToast(isPlaying ? '▶ 播放' : '⏸ 暂停');
+            if (isPlaying) { stopSimulatedPlay(); } else { startSimulatedPlay(); }
         });
 
-        // 时间戳点击跳转 + hover 即跳转（不点击也能即时预览）
+        // 时间戳点击跳转 + hover 即跳转 — 进度条定位
         let videoCurrentTime = '00:00';
         function seekVideoTo(timeText) {
             // timeText 形如 "00:01-00:07" 或 "00:08"
             const start = (timeText.match(/(\d+:\d+)/) || [])[1] || '00:00';
             videoCurrentTime = start;
-            const tc = document.getElementById('time-current');
-            if (tc) tc.textContent = start;
-            // 进度条 thumb 跟随
             const [m, s] = start.split(':').map(Number);
-            const pct = ((m * 60 + s) / TOTAL_SECONDS * 100).toFixed(2);
-            const fill = document.getElementById('vp-fill');
-            const thumb = document.getElementById('vp-thumb');
-            if (fill) fill.style.width = pct + '%';
-            if (thumb) thumb.style.left = pct + '%';
+            const targetSec = m * 60 + s;
+            // 暂停播放，跳转到指定位置
+            stopSimulatedPlay();
+            updateProgressUI(targetSec);
             // 高亮对应进度条段
             document.querySelectorAll('#vp-segments .seg').forEach(s => s.classList.remove('focus'));
             const card = document.querySelector('.annot-card.focus-current');
@@ -2153,8 +2264,8 @@
             });
         });
 
-        // ============ 视频段着色条（基于卡片状态实时生成） ============
-        const TOTAL_SECONDS = 34;
+        // 视频段着色条（基于卡片状态实时生成） ============
+        function getTotalSeconds() { return TOTAL_SECONDS; }
         function parseTimeRange(text) {
             const m = text.match(/(\d+):(\d+)-(\d+):(\d+)/);
             if (!m) return null;
@@ -2171,8 +2282,8 @@
                 if (!tEl) return;
                 const r = parseTimeRange(tEl.textContent);
                 if (!r) return;
-                const left = (r.s / TOTAL_SECONDS * 100).toFixed(2);
-                const width = Math.max(2, (r.e - r.s) / TOTAL_SECONDS * 100).toFixed(2);
+                const left = (r.s / getTotalSeconds() * 100).toFixed(2);
+                const width = Math.max(2, (r.e - r.s) / getTotalSeconds() * 100).toFixed(2);
                 const state = card.classList.contains('confirmed') ? 'accepted'
                             : card.classList.contains('rejected') ? 'rejected' : 'pending';
                 const focus = card.classList.contains('focus-current') ? ' focus' : '';
@@ -2187,6 +2298,46 @@
             });
         }
         renderVideoSegments();
+
+        // ============ 进度条点击拖拽跳转 ============
+        const progressBar = document.getElementById('video-progress');
+        if (progressBar) {
+            function seekByProgress(e) {
+                const rect = progressBar.getBoundingClientRect();
+                const pct = Math.max(0, Math.min(1, (e.clientX - rect.left) / rect.width));
+                stopSimulatedPlay();
+                updateProgressUI(pct * TOTAL_SECONDS);
+            }
+            progressBar.addEventListener('click', e => {
+                if (e.target.classList.contains('seg')) return;
+                seekByProgress(e);
+            });
+            // 拖拽支持
+            let isDragging = false;
+            progressBar.addEventListener('mousedown', e => {
+                if (e.target.classList.contains('seg')) return;
+                isDragging = true;
+                seekByProgress(e);
+            });
+            document.addEventListener('mousemove', e => {
+                if (!isDragging) return;
+                seekByProgress(e);
+            });
+            document.addEventListener('mouseup', () => { isDragging = false; });
+            // 点击段着色条跳转到段中点
+            const segContainer = document.getElementById('vp-segments');
+            if (segContainer) {
+                segContainer.addEventListener('click', e => {
+                    const seg = e.target.closest('.seg');
+                    if (!seg) return;
+                    const left = parseFloat(seg.style.left) || 0;
+                    const width = parseFloat(seg.style.width) || 0;
+                    const midPct = (left + width / 2) / 100;
+                    stopSimulatedPlay();
+                    updateProgressUI(midPct * TOTAL_SECONDS);
+                });
+            }
+        }
         // 状态变化时重渲染
         const _origSetCardState = setCardState;
         setCardState = function(card, state, extra) {
@@ -2557,7 +2708,7 @@
         focusCard(0);
 
         // 启动提示
-        setTimeout(() => showFloatToast('💡 按 ? 查看快捷键'), 500);
+        setTimeout(() => showFloatToast('💡 按 ? 查看快捷键 ｜ 勾选 ASR/OCR 行可合并多段'), 500);
 
         // ============ 新增风险点（人工补漏） ============
         let addedRiskCount = 0;
@@ -2597,7 +2748,7 @@
                         </div>
                         <div class="reason-row">
                             <span class="label">违规理由：</span>
-                            <span class="reason-text" contenteditable="true" style="outline:none;">点击输入违规理由</span>
+                            <span class="reason-text" contenteditable="true" style="outline:none;">点击输入违规理由（格式：1-3：违规理由；多段用全角分号分隔）</span>
                             <span class="edit-icon" title="编辑">✎</span>
                         </div>
                     </div>
@@ -2609,6 +2760,7 @@
                             <option value="text" ${presetType==='text'?'selected':''}>画面文字</option>
                             <option value="voice" ${presetType==='voice'?'selected':''}>语音文字</option>
                             <option value="scene" ${presetType==='scene'?'selected':''}>画面本身</option>
+                            <option value="abnormal" ${presetType==='abnormal'?'selected':''}>视频异常</option>
                         </select>
                     </div>
                     <div class="expand-row">
@@ -2633,7 +2785,10 @@
                             <span class="quick-tag">夸大功效</span>
                             <span class="quick-tag">软色情</span>
                             <span class="quick-tag">绝对化用语</span>
-                        </div>
+                                    <span class="quick-tag combine">结合画面本身</span>
+                                    <span class="quick-tag combine">结合语音文字</span>
+                                    <span class="quick-tag combine">结合画面文字</span>
+                                </div>
                     </div>
                 </div>
                 <div class="annot-actions">
@@ -2734,6 +2889,9 @@
                 </div>
                 <div data-t="scene" style="padding:6px 10px;cursor:pointer;font-size:12px;border-radius:3px;display:flex;align-items:center;gap:6px;">
                     <span style="width:8px;height:8px;background:#1890ff;border-radius:2px;"></span>画面本身
+                </div>
+                <div data-t="abnormal" style="padding:6px 10px;cursor:pointer;font-size:12px;border-radius:3px;display:flex;align-items:center;gap:6px;">
+                    <span style="width:8px;height:8px;background:#faad14;border-radius:2px;"></span>视频异常
                 </div>
             `;
             menu.querySelectorAll('div[data-t]').forEach(item => {
@@ -2937,17 +3095,100 @@
             menu.style.left = x + 'px'; menu.style.top = y + 'px';
         }
 
-        // 绑定 ASR 行 & OCR 行
+        // 绑定 ASR 行 & OCR 行 — 支持多选（Ctrl/Cmd+点击）
+        let selectedRows = [];
+        let multiSelectBar = null;
+
+        function updateMultiSelectBar() {
+            const rows = document.querySelectorAll('.asr-row.selected, .ocr-row.selected');
+            selectedRows = Array.from(rows);
+            if (selectedRows.length >= 2) {
+                if (!multiSelectBar) {
+                    multiSelectBar = document.createElement('div');
+                    multiSelectBar.className = 'multi-select-bar';
+                    multiSelectBar.innerHTML = `
+                        <span class="ms-count"></span>
+                        <button class="ms-btn ms-merge">✓ 合并为风险点</button>
+                        <button class="ms-btn ms-clear">✕ 清除选择</button>
+                    `;
+                    multiSelectBar.querySelector('.ms-merge').onclick = () => mergeSelectedRows();
+                    multiSelectBar.querySelector('.ms-clear').onclick = () => clearRowSelection();
+                    document.body.appendChild(multiSelectBar);
+                }
+                multiSelectBar.querySelector('.ms-count').textContent = `已选 ${selectedRows.length} 行`;
+                multiSelectBar.style.display = 'flex';
+            } else if (multiSelectBar) {
+                multiSelectBar.style.display = 'none';
+            }
+        }
+
+        function clearRowSelection() {
+            document.querySelectorAll('.asr-row.selected, .ocr-row.selected').forEach(r => r.classList.remove('selected'));
+            selectedRows = [];
+            updateMultiSelectBar();
+        }
+
+        function mergeSelectedRows() {
+            const rows = document.querySelectorAll('.asr-row.selected, .ocr-row.selected');
+            if (rows.length < 2) return;
+            // 按时间排序
+            const sorted = Array.from(rows).sort((a, b) => {
+                const tA = (a.querySelector('.ts')?.textContent || '00:00').trim();
+                const tB = (b.querySelector('.ts')?.textContent || '00:00').trim();
+                return tA.localeCompare(tB);
+            });
+            // 提取各段时间范围
+            const timeRanges = sorted.map(r => {
+                const ts = (r.querySelector('.ts')?.textContent || '00:00').trim();
+                // 如果行有 data-card，尝试从对应卡片获取结束时间
+                const cardId = r.dataset.card;
+                if (cardId) {
+                    const card = document.querySelector(`[data-id="${cardId}"]`);
+                    const cardTime = card?.querySelector('.card-time')?.textContent?.replace(/[▶\s]/g, '') || '';
+                    // cardTime 可能是 "00:01-00:07" 或 "00:01-00:07；00:15-00:20" 多段
+                    return cardTime || ts;
+                }
+                // 无关联卡片，用单时间点
+                return ts;
+            });
+            // 用全角分号拼接多段时间
+            const combinedTime = timeRanges.join('；');
+            // 合并文本
+            const combinedText = sorted.map(r => r.querySelector('.text')?.textContent?.trim() || '').join('；');
+            // 来源
+            const source = sorted[0].closest('.asr-full') ? 'voice' : 'text';
+            addNewRiskCard(source, combinedText, combinedTime);
+            clearRowSelection();
+            showFloatToast(`✓ 已合并 ${sorted.length} 段时间创建风险点`);
+        }
+
+        // 绑定 ASR/OCR 行勾选框 + 行点击
         document.querySelectorAll('.asr-row, .ocr-row').forEach(row => {
+            const check = row.querySelector('.row-check');
+            if (check) {
+                check.addEventListener('click', e => {
+                    e.stopPropagation();
+                    row.classList.toggle('selected');
+                    updateMultiSelectBar();
+                });
+            }
             row.addEventListener('click', e => {
-                if (e.target.classList.contains('ts')) return; // ts 已有 hover-seek，由外层处理
+                if (e.target.classList.contains('ts')) return; // ts 已有 hover-seek
+                if (e.target.classList.contains('row-check')) return; // 勾选框单独处理
                 e.stopPropagation();
+                // 有选中行时，点击任意行（非勾选框）切换选中
+                const hasSelected = document.querySelectorAll('.asr-row.selected, .ocr-row.selected').length > 0;
+                if (hasSelected) {
+                    row.classList.toggle('selected');
+                    updateMultiSelectBar();
+                    return;
+                }
+                // 无选中 → 弹出操作菜单（保留原有单行菜单逻辑）
                 const tsEl = row.querySelector('.ts');
                 const textEl = row.querySelector('.text');
                 const timeText = tsEl ? tsEl.textContent.trim() : '';
                 const rowText = textEl ? textEl.textContent.trim() : '';
                 const cardId = row.dataset.card || row.querySelector('[data-card]')?.dataset?.card || null;
-                // ASR 行 → 语音文字；OCR 行 → 画面文字
                 const source = row.closest('.asr-full') ? 'ASR' : 'OCR';
                 const menu = buildRowMenu(row, { cardId, timeText, rowText, source });
                 positionMenu(menu, e);
