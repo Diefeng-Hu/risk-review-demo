@@ -770,7 +770,7 @@
             line-height: 1.5;
             font-family: inherit;
         }
-        .annot-card.editing .reason-row .edit-icon:not(.deco-icon) {
+        .annot-card.editing .reason-row .edit-icon {
             display: none !important;
         }
         .annot-card.editing .reason-row .deco-icon {
@@ -1991,7 +1991,7 @@
                     let decoIcon = reasonRow.querySelector('.deco-icon');
                     if (!decoIcon) {
                         decoIcon = document.createElement('span');
-                        decoIcon.className = 'edit-icon deco-icon';
+                        decoIcon.className = 'deco-icon';
                         decoIcon.textContent = '✎';
                         decoIcon.style.pointerEvents = 'none';
                         reasonRow.appendChild(decoIcon);
@@ -2092,7 +2092,7 @@
                     // 取消：恢复 reason-text 显示，隐藏 input 和装饰图标
                     const inp = card.querySelector('.reason-input');
                     const rt = card.querySelector('.reason-text');
-                    const origEi = card.querySelector('.reason-row .edit-icon:not(.deco-icon)');
+                    const origEi = card.querySelector('.reason-row .edit-icon');
                     const decoIcon = card.querySelector('.deco-icon');
                     if (inp) inp.style.display = 'none';
                     if (rt) rt.style.display = '';
