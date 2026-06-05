@@ -3144,17 +3144,31 @@
                 return tA.localeCompare(tB);
             });
             // 提取各段时间范围：每段用 "起始-结束" 格式
+            // ASR/OCR 每行只有起始时间戳，结束时间需推算：
+            // - 有卡片关联 → 取卡片时间段
+            // - 非最后一行 → 用同一面板中下一行的起始时间
+            // - 最后一行 → 起始 + 5s 估算
+            const allRows = Array.from(document.querySelectorAll('.asr-row, .ocr-row'));
             const timeRanges = sorted.map(r => {
                 const ts = (r.querySelector('.ts')?.textContent || '00:00').trim();
-                // 如果行有 data-card，从对应卡片取完整时间段（如 "00:01-00:07"）
                 const cardId = r.dataset.card;
                 if (cardId) {
                     const card = document.querySelector(`[data-id="${cardId}"]`);
                     const cardTime = card?.querySelector('.card-time')?.textContent?.replace(/[▶\s]/g, '') || '';
                     if (cardTime) return cardTime;
                 }
-                // 无关联卡片：起止时间相同，如 "00:08-00:08"
-                return `${ts}-${ts}`;
+                const idx = allRows.indexOf(r);
+                const next = allRows[idx + 1];
+                if (next) {
+                    const nextTs = (next.querySelector('.ts')?.textContent || '').trim();
+                    if (nextTs) return `${ts}-${nextTs}`;
+                }
+                // 无下一行：+5s 估算
+                const parts = ts.split(':');
+                let secs = parts.length === 2 ? parseInt(parts[0]) * 60 + parseInt(parts[1]) : parseInt(parts[0]) || 0;
+                secs += 5;
+                const endTs = secs >= 60 ? `${Math.floor(secs/60)}:${String(secs%60).padStart(2,'0')}` : `${secs}`;
+                return `${ts}-${endTs}`;
             });
             // 用全角分号拼接多段时间
             const combinedTime = timeRanges.join('；');
