@@ -2728,7 +2728,7 @@
             const t = types[presetType] || types.voice;
             const newId = 'card-new-' + addedRiskCount;
             const totalIdx = document.querySelectorAll('.annot-card').length + 1;
-            const timeVal = prefillTime ? `▶ ${prefillTime}-${prefillTime}` : `▶ ${videoCurrentTime}-${videoCurrentTime}`;
+            const timeVal = prefillTime ? `▶ ${prefillTime}` : `▶ ${videoCurrentTime}-${videoCurrentTime}`;
             const textVal = prefillText || '点击此处输入违规原文（如 ASR 片段、画面文字）';
 
             const card = document.createElement('div');
