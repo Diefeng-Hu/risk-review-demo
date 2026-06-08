@@ -1,0 +1,23 @@
+* { margin: 0; padding: 0; box-sizing: border-box; }
+        html, body { height: 100%; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Microsoft YaHei", sans-serif;
+            background: #f0f2f7;
+            background-image: radial-gradient(circle at 20% 0%, rgba(24,144,255,0.04), transparent 40%), radial-gradient(circle at 80% 100%, rgba(82,196,26,0.03), transparent 40%);
+            color: #1f2937;
+            font-size: 13px;
+            overflow: hidden;
+            -webkit-font-smoothing: antialiased;
+        }
+        ::-webkit-scrollbar { width: 8px; height: 8px; }
+        ::-webkit-scrollbar-thumb { background: #d9dde4; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #b8c0cc; }
+        ::-webkit-scrollbar-track { background: transparent; }
+
+        /* ============ 顶部栏 ============ */
+        .top-bar {
+            height: 40px;
+            background: #fff;
+            border-bottom: 1px solid #eaedf2;
+            display: flex;
+            align-items: center;
