@@ -1,0 +1,133 @@
+padding: 0 14px;
+            gap: 10px;
+            box-shadow: 0 1px 2px rgba(15,23,42,0.04);
+            position: relative;
+            z-index: 10;
+            white-space: nowrap;
+            overflow: hidden;
+        }
+        .top-bar .title {
+            font-size: 13px;
+            font-weight: 600;
+            color: #111827;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            flex-shrink: 1;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            min-width: 0;
+        }
+        .top-bar .title span:last-child {
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+        .top-bar .badge {
+            background: #e6f7ff;
+            color: #1890ff;
+            font-size: 11px;
+            padding: 1px 6px;
+            border-radius: 3px;
+        }
+        .top-bar .meta-group {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 11px;
+            color: #6b7280;
+            flex-shrink: 0;
+        }
+        .top-bar .meta-group .meta-item {
+            display: inline-flex; align-items: center; gap: 3px;
+            padding: 2px 6px; border-radius: 4px;
+            background: #f8fafc;
+            border: 1px solid #eef0f4;
+            white-space: nowrap;
+        }
+        .meta-item .num { color: #ff4d4f; font-weight: 700; }
+        .meta-item .countdown { color: #fff; font-weight: 700; background: #ff4d4f; padding: 1px 6px; border-radius: 8px; font-size: 11px; animation: pulse 1.4s infinite; }
+        @keyframes pulse { 0%,100% { box-shadow: 0 0 0 0 rgba(255,77,79,.5); } 50% { box-shadow: 0 0 0 6px rgba(255,77,79,0); } }
+        .top-bar .spacer { flex: 1; min-width: 8px; }
+        .top-icon {
+            color: #94a3b8; cursor: pointer; font-size: 15px;
+            padding: 4px 6px; border-radius: 4px;
+            transition: all .15s;
+            flex-shrink: 0;
+        }
+        .top-icon:hover { color: #1890ff; background: #e6f7ff; }
+        .risk-domain-select {
+            padding: 5px 28px 5px 10px;
+            border: 1px solid #d9d9d9;
+            border-radius: 4px;
+            font-size: 12px;
+            background: #fff;
+            cursor: pointer;
+            appearance: none;
+            background-image: url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 12'%3E%3Cpath fill='%23999' d='M6 8L2 4h8z'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 8px center;
+            background-size: 10px;
+        }
+        .btn {
+            padding: 3px 10px;
+            border-radius: 4px;
+            border: 1px solid #d9d9d9;
+            background: #fff;
+            color: #333;
+            font-size: 12px;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            transition: all .15s;
+            white-space: nowrap;
+            flex-shrink: 0;
+        }
+        .btn:hover { border-color: #1890ff; color: #1890ff; }
+        .btn-primary { background: #1890ff; border-color: #1890ff; color: #fff; }
+        .btn-primary:hover { background: #40a9ff; border-color: #40a9ff; color: #fff; }
+        .btn-success { background: #52c41a; border-color: #52c41a; color: #fff; }
+        .btn-success:hover { background: #73d13d; border-color: #73d13d; color: #fff; }
+        .btn-danger { background: #fff; border-color: #ff4d4f; color: #ff4d4f; }
+        .btn-danger:hover { background: #ff4d4f; color: #fff; }
+        .ai-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 3px;
+            padding: 1px 6px;
+            background: #1890ff;
+            color: #fff;
+            border-radius: 3px;
+            font-size: 10px;
+            font-weight: 500;
+        }
+        .kbd {
+            display: inline-block;
+            min-width: 16px;
+            padding: 0 5px;
+            margin-left: 5px;
+            background: rgba(255,255,255,0.22);
+            border: 1px solid rgba(255,255,255,0.35);
+            border-radius: 3px;
+            font-family: 'SF Mono', Monaco, monospace;
+            font-size: 10px;
+            line-height: 14px;
+            color: inherit;
+            vertical-align: middle;
+            font-weight: 500;
+        }
+        .btn:not(.btn-primary):not(.btn-success):not(.btn-danger) .kbd {
+            background: #f0f0f0;
+            border-color: #d9d9d9;
+            color: #666;
+        }
+        .btn-danger .kbd { background: #fff1f0; border-color: #ffa39e; color: #ff4d4f; }
+
+        /* ============ 主布局 ============ */
+        .main-layout {
+            display: flex;
+            height: calc(100vh - 40px);
+            padding-bottom: 40px;
+            box-sizing: border-box;
+            transition: padding-bottom .25s ease;
