@@ -1,0 +1,148 @@
+/* 下半：卡片流 + 参考栏 */
+        .cards-flow-wrap {
+            flex: 1;
+            background: #fff;
+            border-radius: 10px;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            box-shadow: 0 4px 16px rgba(15,23,42,0.07), 0 1px 4px rgba(15,23,42,0.04);
+            border: 1px solid #e8ecf2;
+        }
+        .flow-header {
+            padding: 10px 14px;
+            border-bottom: 1px solid #eef0f4;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: #fff;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+        .flow-title {
+            font-size: 13px;
+            font-weight: 600;
+            color: #111827;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .flow-title::before {
+            content: ''; width: 3px; height: 14px;
+            background: #1890ff;
+            border-radius: 2px;
+        }
+        .filter-tabs {
+            display: flex;
+            gap: 6px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+        .filter-tab {
+            padding: 3px 12px;
+            border-radius: 12px;
+            background: #fff;
+            border: 1px solid #e2e6ee;
+            color: #6b7280;
+            font-size: 11px;
+            cursor: pointer;
+            transition: all .15s;
+            user-select: none;
+        }
+        .filter-tab:hover { border-color: #1890ff; color: #1890ff; }
+        .filter-tab.active { background: #1890ff; color: #fff; border-color: #1890ff; box-shadow: 0 2px 6px rgba(24,144,255,.25); }
+        .filter-tab .badge-num {
+            display: inline-block; min-width: 14px; text-align: center;
+            font-size: 10px; padding: 0 4px;
+            margin-left: 4px;
+            background: rgba(0,0,0,.06); border-radius: 7px;
+        }
+        .filter-tab.active .badge-num { background: rgba(255,255,255,.25); color: #fff; }
+        .cards-flow {
+            flex: 1;
+            overflow-y: auto;
+            padding: 10px 12px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            scroll-behavior: smooth;
+        }
+        /* 已解决卡片视觉降权（在"全部"/"已解决"视图中显示时） */
+        .cards-flow.show-resolved .annot-card.confirmed,
+        .cards-flow.show-resolved .annot-card.rejected {
+            opacity: .7;
+            transition: opacity .2s, transform .2s;
+        }
+        .cards-flow.show-resolved .annot-card.confirmed:hover,
+        .cards-flow.show-resolved .annot-card.rejected:hover {
+            opacity: 1;
+        }
+
+        /* 右侧队列栏 */
+        .queue-panel {
+            width: 100px;
+            min-width: 100px;
+            background: #fff;
+            border-left: 1px solid #e8e8e8;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+        .queue-header {
+            padding: 10px;
+            border-bottom: 1px solid #f0f0f0;
+            font-size: 12px;
+            font-weight: 600;
+            color: #333;
+            text-align: center;
+            background: #fafafa;
+        }
+        .queue-list {
+            flex: 1;
+            overflow-y: auto;
+            padding: 6px;
+        }
+        .queue-item {
+            padding: 8px 4px;
+            margin-bottom: 4px;
+            border-radius: 4px;
+            cursor: pointer;
+            text-align: center;
+            font-size: 11px;
+            color: #666;
+            border: 1px solid #f0f0f0;
+            background: #fff;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 2px;
+            transition: all .15s;
+            position: relative;
+        }
+        .queue-item:hover { border-color: #1890ff; background: #e6f7ff; }
+        .queue-item.current {
+            background: #1890ff;
+            color: #fff;
+            border-color: #1890ff;
+            font-weight: 500;
+        }
+        .queue-item .q-id { font-weight: 600; font-size: 12px; }
+        .queue-item .q-status { font-size: 10px; }
+        .queue-item.done { background: #f6ffed; border-color: #b7eb8f; color: #52c41a; }
+        .queue-item.rejected { background: #fff1f0; border-color: #ffa39e; color: #ff4d4f; }
+        .queue-footer {
+            padding: 8px;
+            border-top: 1px solid #f0f0f0;
+            font-size: 11px;
+            text-align: center;
+            color: #999;
+            background: #fafafa;
+        }
+
+        /* ============ 卡片样式 ============ */
+        .annot-card {
+            background: #fff;
+            border: 1px solid #e8ecf2;
+            border-left: 3px solid #1890ff;
+            border-radius: 6px;
+            padding: 10px 12px;
