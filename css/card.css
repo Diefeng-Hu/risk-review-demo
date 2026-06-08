@@ -1,0 +1,341 @@
+transition: all .18s;
+            position: relative;
+            cursor: pointer;
+        }
+        .annot-card:hover { box-shadow: 0 3px 10px rgba(15,23,42,0.07); border-color: #91d5ff; background: #fafdff; }
+        .annot-card.text { border-left-color: #1890ff; }
+        .annot-card.voice { border-left-color: #1890ff; }
+        .annot-card.scene { border-left-color: #1890ff; }
+        .annot-card.confirmed {
+            background: linear-gradient(180deg, #f6ffed, #fafffa);
+            border-color: #b7eb8f;
+            border-left: 4px solid #52c41a;
+        }
+        .annot-card.confirmed::before {
+            content: ''; position: absolute; top: 0; right: 0;
+            width: 0; height: 0;
+            border-style: solid; border-width: 0 26px 26px 0;
+            border-color: transparent #52c41a transparent transparent;
+        }
+        .annot-card.confirmed::after {
+            content: '✓'; position: absolute; top: 2px; right: 4px;
+            color: #fff; font-size: 12px; font-weight: 700;
+            line-height: 1;
+        }
+        .annot-card.rejected {
+            background: #fafafa;
+            border-color: #f0f0f0;
+            border-left: 4px dashed #ff4d4f;
+            opacity: 0.62;
+        }
+        .annot-card.rejected .original-text,
+        .annot-card.rejected .reason-row {
+            text-decoration: line-through;
+            text-decoration-color: rgba(255,77,79,.5);
+            color: #999;
+        }
+        .annot-card.focus-current {
+            box-shadow: 0 0 0 2px #1890ff, 0 8px 24px rgba(24,144,255,.18);
+            transform: translateY(-1px);
+            border-color: #1890ff;
+        }
+        .annot-card.focus-current:not(.confirmed):not(.rejected) {
+            background: linear-gradient(180deg, #f0f8ff, #ffffff) !important;
+        }
+        /* 视频时间轴上的风险段着色（已合并到 .video-progress 内，旧 .video-segments 隐藏） */
+        .video-segments { display: none; }
+        /* 接受/剔除后的瞬时高亮反馈动画 */
+        @keyframes flashAccept {
+            0% { box-shadow: 0 0 0 4px rgba(82,196,26,.5), 0 0 30px rgba(82,196,26,.4); }
+            100% { box-shadow: 0 0 0 0 rgba(82,196,26,0), 0 0 0 rgba(82,196,26,0); }
+        }
+        @keyframes flashReject {
+            0% { box-shadow: 0 0 0 4px rgba(255,77,79,.5), 0 0 30px rgba(255,77,79,.4); }
+            100% { box-shadow: 0 0 0 0 rgba(255,77,79,0), 0 0 0 rgba(255,77,79,0); }
+        }
+        .annot-card.flash-accept { animation: flashAccept .6s ease-out; }
+        .annot-card.flash-reject { animation: flashReject .6s ease-out; }
+
+        /* 状态徽标（已接受/已剔除） */
+        .status-badge {
+            font-size: 11px; padding: 2px 8px; border-radius: 10px;
+            font-weight: 500; display: inline-flex; align-items: center; gap: 3px;
+        }
+        .status-badge.accepted { background: #52c41a; color: #fff; }
+        .status-badge.rejected { background: #ff4d4f; color: #fff; }
+        .annot-card.editing {
+            box-shadow: 0 0 0 2.5px #1890ff, 0 12px 32px rgba(24,144,255,.15);
+            background: #fff !important;
+            border-radius: 12px;
+        }
+        /* 编辑模式 — 原文区样式（蓝色虚线框） */
+        .annot-card.editing .original-text {
+            background: #f0f8ff;
+            border: 1.5px dashed #69b7ff;
+            border-radius: 6px;
+            padding: 10px 14px;
+        }
+        /* 编辑模式 — 违规理由区样式（黄色实线框 + 铅笔图标） */
+        .annot-card.editing .reason-row {
+            background: #fffbe6;
+            border: 1.5px solid #ffd666;
+            border-radius: 6px;
+            padding: 8px 12px;
+            display: flex; align-items: center; gap: 8px;
+        }
+        .annot-card.editing .reason-row .reason-input {
+            flex: 1;
+            border: none;
+            outline: none;
+            background: transparent;
+            font-size: 12.5px;
+            color: #7a5b00;
+            line-height: 1.5;
+            font-family: inherit;
+        }
+        .annot-card.editing .reason-row .edit-icon {
+            display: none !important;
+        }
+        .annot-card.editing .reason-row .deco-icon {
+            color: #bfae60;
+            font-size: 15px;
+            cursor: default;
+            padding: 0;
+        }
+        /* 保存/取消按钮 */
+        .action-btn.save {
+            background: #f6ffed !important;
+            border-color: #b7eb8f !important;
+            color: #52c41a !important;
+            font-weight: 500;
+        }
+        .action-btn.save:hover {
+            background: #52c41a !important;
+            color: #fff !important;
+            border-color: #52c41a !important;
+        }
+        .action-btn.cancel {
+            background: #fff !important;
+            border-color: #d9d9d9 !important;
+            color: #595959 !important;
+        }
+        .action-btn.edit { color: #1890ff; border-color: #91d5ff; background: #e6f7ff; }
+        .action-btn.edit:hover { background: #1890ff; color: #fff; border-color: #1890ff; }
+
+        .card-head {
+            display: flex; align-items: center; gap: 8px;
+            margin-bottom: 10px;
+        }
+        .card-id {
+            font-weight: 700; color: #fff;
+            font-size: 11px;
+            min-width: 22px; height: 22px;
+            border-radius: 50%;
+            background: #1890ff;
+            display: inline-flex; align-items: center; justify-content: center;
+            box-shadow: 0 2px 4px rgba(24,144,255,.25);
+        }
+        .annot-card.voice .card-id { background: #1890ff; box-shadow: 0 2px 4px rgba(24,144,255,.25); }
+        .annot-card.scene .card-id { background: #1890ff; box-shadow: 0 2px 4px rgba(24,144,255,.25); }
+        .card-time {
+            background: #f8fafc; border: 1px solid #e2e6ee;
+            padding: 2px 9px; border-radius: 4px;
+            font-family: 'SF Mono', Monaco, monospace;
+            font-size: 11px; color: #1f2937;
+            cursor: pointer;
+            transition: all .15s;
+        }
+        .card-time:hover { border-color: #1890ff; color: #1890ff; background: #e6f7ff; }
+        .card-type-tag {
+            font-size: 11px; padding: 2px 9px; border-radius: 10px;
+            font-weight: 500;
+            display: inline-flex; align-items: center; gap: 4px;
+        }
+        .card-type-tag::before { content: ''; width: 6px; height: 6px; border-radius: 50%; background: currentColor; }
+        .card-type-tag.text { background: #f0f3f7; color: #595959; }
+        .card-type-tag.voice { background: #f0f3f7; color: #595959; }
+        .card-type-tag.scene { background: #f0f3f7; color: #595959; }
+
+        .card-head .spacer { flex: 1; }
+
+        .action-btn {
+            padding: 4px 12px;
+            border-radius: 4px;
+            border: 1px solid #e2e6ee;
+            background: #fff;
+            font-size: 12px;
+            cursor: pointer;
+            color: #4b5563;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            transition: all .15s;
+            font-weight: 500;
+        }
+        .action-btn:hover { border-color: #1890ff; color: #1890ff; background: #e6f7ff; }
+        .action-btn.accept { color: #52c41a; border-color: #b7eb8f; background: #f6ffed; }
+        .action-btn.accept:hover { background: #52c41a; color: #fff; border-color: #52c41a; box-shadow: 0 2px 6px rgba(82,196,26,.25); }
+        .action-btn.reject { color: #ff4d4f; border-color: #ffa39e; background: #fff1f0; }
+        .action-btn.reject:hover { background: #ff4d4f; color: #fff; border-color: #ff4d4f; box-shadow: 0 2px 6px rgba(255,77,79,.25); }
+        .action-btn .kbd-mini {
+            display: inline-block;
+            padding: 0 4px;
+            font-size: 9px;
+            background: #f0f0f0;
+            border: 1px solid #d9d9d9;
+            border-radius: 2px;
+            color: #999;
+            font-family: 'SF Mono', Monaco, monospace;
+            margin-left: 3px;
+            line-height: 12px;
+        }
+
+        .card-body { display: flex; gap: 12px; align-items: flex-start; }
+        .card-thumb {
+            width: 72px; height: 72px;
+            border-radius: 6px; overflow: hidden;
+            flex-shrink: 0; background: #f0f0f0;
+            cursor: pointer;
+            border: 1px solid #eef0f4;
+            transition: all .15s;
+        }
+        .card-thumb:hover { border-color: #1890ff; transform: scale(1.04); }
+        .card-thumb img { width: 100%; height: 100%; object-fit: cover; display: block; }
+        .card-content { flex: 1; min-width: 0; }
+        .original-text {
+            background: #f8fafc;
+            border: 1px solid #eef0f4;
+            border-radius: 4px;
+            padding: 8px 12px;
+            font-size: 13px;
+            line-height: 1.65;
+            color: #1f2937;
+            margin-bottom: 8px;
+        }
+        .original-text .label {
+            color: #94a3b8; font-size: 11px; margin-right: 6px;
+            font-weight: 600; letter-spacing: .3px;
+        }
+        .original-text .highlight {
+            background: linear-gradient(180deg, transparent 60%, #ffd6d6 60%);
+            color: #ff4d4f;
+            padding: 0 2px;
+            font-weight: 600;
+        }
+        .reason-row {
+            display: flex; align-items: center; gap: 8px;
+            font-size: 12px; color: #7a5b00;
+            background: #fffbe6;
+            border: 1px solid #ffe58f;
+            border-radius: 4px;
+            padding: 6px 12px;
+        }
+        .reason-row .label { color: #d48806; font-weight: 600; flex-shrink: 0; font-size: 11px; letter-spacing: .3px; }
+        .reason-row .reason-text { flex: 1; line-height: 1.5; }
+        .reason-row .edit-icon { color: #1890ff; cursor: pointer; font-size: 13px; padding: 2px 4px; border-radius: 3px; }
+        .reason-row .edit-icon:hover { color: #fff; background: #1890ff; }
+
+        /* 内联展开区 */
+        .card-expand {
+            display: none;
+            margin-top: 10px;
+            padding: 12px 14px;
+            background: #f0f8ff;
+            border: 1px solid #bae0ff;
+            border-radius: 6px;
+        }
+        .card-expand.show { display: block; }
+        .expand-row {
+            display: flex; align-items: center; gap: 8px;
+            margin-bottom: 8px; font-size: 12px;
+        }
+        .expand-row:last-child { margin-bottom: 0; }
+        .expand-row .label {
+            color: #6b7280; min-width: 62px; flex-shrink: 0; font-weight: 500;
+        }
+        .expand-select {
+            padding: 3px 22px 3px 8px;
+            border: 1px solid #d9d9d9;
+            border-radius: 3px;
+            background: #fff;
+            font-size: 12px;
+            cursor: pointer;
+            appearance: none;
+            background-image: url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 12'%3E%3Cpath fill='%23999' d='M6 8L2 4h8z'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 6px center;
+            background-size: 10px;
+        }
+        .expand-input {
+            flex: 1;
+            padding: 3px 8px;
+            border: 1px solid #d9d9d9;
+            border-radius: 3px;
+            font-size: 12px;
+            background: #fff;
+        }
+        .expand-input:focus { outline: none; border-color: #1890ff; }
+        .quick-tags {
+            display: flex; flex-wrap: wrap; gap: 4px;
+        }
+        .quick-tag {
+            padding: 1px 8px;
+            border-radius: 10px;
+            background: #f5f5f5;
+            border: 1px solid #d9d9d9;
+            color: #666;
+            font-size: 11px;
+            cursor: pointer;
+        }
+        .quick-tag:hover, .quick-tag.active {
+            background: #e6f7ff;
+            border-color: #1890ff;
+            color: #1890ff;
+        }
+        .quick-tag.combine {
+            background: #fffbe6;
+            border-color: #ffd666;
+            color: #d46b08;
+        }
+        .quick-tag.combine:hover, .quick-tag.combine.active {
+            background: #fff1b8;
+            border-color: #faad14;
+            color: #ad4e00;
+        }
+        .btn-success {
+            background: #52c41a;
+            color: #fff;
+            border: 1px solid #52c41a;
+        }
+        .btn-success:hover {
+            background: #73d13d;
+            border-color: #73d13d;
+        }
+        .expand-toggle {
+            display: inline-flex; align-items: center; gap: 4px;
+            font-size: 11px; color: #1890ff;
+            cursor: pointer;
+            padding: 2px 6px;
+            border-radius: 3px;
+        }
+        .expand-toggle:hover { background: #e6f7ff; }
+        .annot-actions {
+            display: flex; gap: 8px; margin-top: 10px; align-items: center;
+            padding-top: 10px;
+            border-top: 1px dashed #eef0f4;
+        }
+        /* 编辑模式 — 底部按钮区 */
+        .annot-card.editing .annot-actions {
+            border-top: 1px dashed #eef0f4;
+            padding-top: 10px;
+        }
+        .annot-card.editing .annot-actions button {
+            padding: 5px 16px;
+            font-size: 13px;
+        }
+        .annot-card.confirmed .annot-actions,
+        .annot-card.rejected .annot-actions { border-top-color: transparent; padding-top: 6px; }
+        .confirmed-mark {
+            font-size: 11px; color: #52c41a;
+            display: inline-flex; align-items: center; gap: 4px;
+        }
