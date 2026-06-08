@@ -1,0 +1,99 @@
+border-top: 1px solid #e8ecf2;
+            display: flex;
+            align-items: center;
+            padding: 0 20px;
+            gap: 10px;
+            font-size: 12px;
+            color: #666;
+            z-index: 50;
+            transition: transform .25s ease, opacity .25s ease;
+        }
+        body.bottom-hidden .main-layout { padding-bottom: 0; }
+        .bottom-status.hidden {
+            transform: translateY(100%);
+            opacity: 0;
+            pointer-events: none;
+        }
+        .bottom-status-toggle {
+            position: fixed;
+            right: 16px; bottom: 8px;
+            width: 28px; height: 28px;
+            border-radius: 50%;
+            background: #fff;
+            border: 1px solid #e8e8e8;
+            box-shadow: 0 4px 12px rgba(15,23,42,0.12);
+            display: none;
+            align-items: center; justify-content: center;
+            cursor: pointer;
+            font-size: 14px;
+            color: #666;
+            z-index: 51;
+            transition: opacity .2s, transform .2s;
+        }
+        .bottom-status-toggle:hover { color: #1890ff; transform: translateY(-2px); }
+        .bottom-status.hidden ~ .bottom-status-toggle { display: flex; }
+        .bottom-status .toggle-collapse {
+            margin-left: 6px;
+            width: 22px; height: 22px;
+            border-radius: 4px;
+            background: #f5f5f5;
+            color: #999;
+            display: inline-flex; align-items: center; justify-content: center;
+            cursor: pointer;
+            font-size: 12px;
+            transition: background .15s, color .15s;
+        }
+        .bottom-status .toggle-collapse:hover { background: #e6f4ff; color: #1890ff; }
+        .hint-group {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            padding: 0 12px;
+            position: relative;
+        }
+        .hint-group + .hint-group::before {
+            content: ''; position: absolute; left: 0; top: 50%;
+            transform: translateY(-50%);
+            width: 1px; height: 18px; background: #f0f0f0;
+        }
+        .hint-group .group-label {
+            font-size: 10px; color: #bbb; letter-spacing: .5px;
+            text-transform: uppercase;
+        }
+        .shortcut-hint {
+            display: inline-flex; align-items: center; gap: 4px;
+            font-size: 12px; color: #595959;
+        }
+        .shortcut-hint .k {
+            display: inline-block;
+            min-width: 18px;
+            padding: 1px 6px;
+            background: #fafafa;
+            border: 1px solid #e8e8e8;
+            border-bottom-width: 2px;
+            border-radius: 3px;
+            font-family: 'SF Mono', Monaco, monospace;
+            font-size: 11px;
+            color: #333;
+            text-align: center;
+            line-height: 14px;
+        }
+        .shortcut-hint .k.green { background: #f6ffed; border-color: #b7eb8f; color: #52c41a; }
+        .shortcut-hint .k.red { background: #fff1f0; border-color: #ffa39e; color: #ff4d4f; }
+        .shortcut-hint .k.blue { background: #e6f7ff; border-color: #91d5ff; color: #1890ff; }
+        .shortcut-hint .k.purple { background: #e6f7ff; border-color: #91d5ff; color: #1890ff; }
+        .progress-stat {
+            margin-left: auto;
+            display: inline-flex; align-items: center; gap: 14px;
+            font-size: 12px; color: #666;
+        }
+        .progress-stat .stat-text { color: #595959; }
+        .progress-stat .stat-text b { font-weight: 600; font-size: 13px; color: #1f2937; }
+        .progress-stat .stat-text b#stat-done { color: #52c41a; }
+        .progress-stat .stat-text b#stat-rej { color: #8c8c8c; }
+        .progress-bar {
+            width: 120px; height: 6px; background: #f0f0f0; border-radius: 3px;
+            overflow: hidden; position: relative;
+        }
+        .progress-bar .fill-done { position: absolute; left: 0; top: 0; bottom: 0; background: #52c41a; transition: width .2s; }
+        .progress-bar .fill-rej { position: absolute; top: 0; bottom: 0; background: #ff4d4f; transition: all .2s; }
