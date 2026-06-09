@@ -67,26 +67,21 @@ function renderCard(c) {
     const focusCls = c.focus ? ' focus-current' : '';
     const typeLabel = RISK_TYPE_MAP[c.type] || c.type;
 
-    // Expand section (only for non-confirmed cards with expand data)
-    let expandHtml = '';
-    if (c.expand) {
-        const e = c.expand;
-        const typeOptions = RISK_TYPES.map(t => `<option${t === RISK_TYPE_MAP[e.riskType] ? ' selected' : ''}>${t}</option>`).join('');
-        const domainOptions = ['大模型精细化-严口径', '禁推病症'].map(d => `<option${d === e.domain ? ' selected' : ''}>${d}</option>`).join('');
-        const subDomainOptions = ['低俗', '黑五类', '软色情', '保证性承诺', '绝对化用语'].map(s => `<option${s === e.subDomain ? ' selected' : ''}>${s}</option>`).join('');
-        const quickTagHtml = [...e.quickTags, ...COMBINE_TAGS].map(t => {
-            const combineCls = COMBINE_TAGS.includes(t) ? ' combine' : '';
-            const activeCls = t === e.activeTag ? ' active' : '';
-            return `<span class="quick-tag${combineCls}${activeCls}">${t}</span>`;
-        }).join('');
-
-        expandHtml = `<div class="card-expand">
-            <div class="expand-row"><span class="label">风险类型：</span><select class="expand-select">${typeOptions}</select></div>
-            ${e.domain ? `<div class="expand-row"><span class="label">风险域：</span><select class="expand-select" style="min-width:130px;">${domainOptions}</select><select class="expand-select" style="min-width:90px;">${subDomainOptions}</select></div>` : ''}
-            <div class="expand-row"><span class="label">常用：</span><div class="quick-tags">${quickTagHtml}</div></div>
-            ${e.direction ? `<div class="expand-row"><span class="label">修改方向：</span><input type="text" class="expand-input" value="${e.direction}"></div>` : ''}
-        </div>`;
-    }
+    // 违规理由多选区（默认折叠，点击展开）
+    const selectedReasons = c.reason ? c.reason.split('；').map(s => s.trim()).filter(Boolean) : [];
+    const reasonCheckHtml = REASON_PRESETS.map(r => {
+        const checked = selectedReasons.includes(r) ? 'checked' : '';
+        return `<label class="reason-check-item"><input type="checkbox" class="reason-check" value="${r}" ${checked}><span>${r}</span></label>`;
+    }).join('');
+    const otherText = selectedReasons.find(r => !REASON_PRESETS.includes(r)) || '';
+    const reasonHtml = `<div class="reason-multi collapsed" data-id="${c.id}">
+        <div class="reason-multi-head" onclick="this.closest('.reason-multi').classList.toggle('collapsed')">违规理由 <span class="reason-count">${selectedReasons.length}</span></div>
+        <div class="reason-multi-body">
+            ${reasonCheckHtml}
+            <label class="reason-check-item other"><input type="checkbox" class="reason-check other-check" value="__other__" ${otherText ? 'checked' : ''}><span>其他</span></label>
+            <input type="text" class="reason-other-input" placeholder="补充其他违规理由…" value="${otherText}" style="${otherText ? '' : 'display:none'}">
+        </div>
+    </div>`;
 
     // Actions
     let actionsHtml;
@@ -95,8 +90,6 @@ function renderCard(c) {
     } else {
         actionsHtml = `<button class="action-btn accept">✓ 接受</button><button class="action-btn edit">✎ 编辑</button><button class="action-btn reject">✗ 剔除</button>`;
     }
-
-    const expandToggle = !c.confirmed ? '<span class="expand-toggle">⚙ 修改分类</span>' : '';
 
     const typeOptions = Object.entries(RISK_TYPE_MAP).map(([val, label]) =>
         `<option value="${val}"${val === c.type ? ' selected' : ''}>${label}</option>`
@@ -112,20 +105,14 @@ function renderCard(c) {
                 <span class="card-time" title="点击跳转">▶ ${c.timeRange}</span>
                 ${typeSelect}
                 <span class="spacer"></span>
-                ${expandToggle}
             </div>
             <div class="card-body">
                 <div class="card-thumb"><img src="https://picsum.photos/seed/${c.id}/64/64" alt=""></div>
                 <div class="card-content">
                     <div class="original-text"><span class="label">${c.sourceLabel}</span>${c.sourceText}</div>
-                    <div class="reason-row">
-                        <span class="label">违规理由：</span>
-                        <span class="reason-text">${c.reason}</span>
-                        <span class="edit-icon" title="编辑（E）">✎</span>
-                    </div>
+                    ${reasonHtml}
                 </div>
             </div>
-            ${expandHtml}
             <div class="annot-actions">${actionsHtml}</div>
         </div>`;
 }
