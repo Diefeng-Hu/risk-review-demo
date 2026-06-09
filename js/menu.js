@@ -32,7 +32,7 @@ function showProgress() {
 
         // 7) 帮助按钮
         document.getElementById('shortcut-help-btn')?.addEventListener('click', () => {
-            alert('完整快捷键帮助将在 Step 5 实现\n\n当前可用：\n• 点击卡片 → 聚焦\n• 时间轴片段 → 跳转对应卡片\n• ⚙ 修改分类 → 展开内联编辑器');
+            alert('完整快捷键帮助将在 Step 5 实现\n\n当前可用：\n• 点击卡片 → 聚焦\n• 时间轴片段 → 跳转对应卡片\n• 违规理由 → 展开多选列表');
         });
 
         // 8) 队列项点击切换
@@ -116,9 +116,9 @@ function showProgress() {
                         document.querySelectorAll('.annot-card').forEach(c => c.classList.remove('focus-current'));
                         card.classList.add('focus-current');
                         card.scrollIntoView({ behavior: 'smooth', block: 'center' });
-                        // 展开修改分类面板
-                        const toggle = card.querySelector('.expand-toggle');
-                        if (toggle && toggle.textContent.includes('修改分类')) toggle.click();
+                        // 展开违规理由多选区
+                        const multi = card.querySelector('.reason-multi');
+                        if (multi) multi.classList.remove('collapsed');
                         const editBtn = card.querySelector('.action-btn.edit');
                         if (editBtn) editBtn.click();
                         showFloatToast(`✎ 正在修改风险点 #${cardId.replace('card-', '')}`);
