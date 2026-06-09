@@ -8,6 +8,8 @@
             font-size: 13px;
             overflow: hidden;
             -webkit-font-smoothing: antialiased;
+            display: flex;
+            flex-direction: column;
         }
         ::-webkit-scrollbar { width: 8px; height: 8px; }
         ::-webkit-scrollbar-thumb { background: #d9dde4; border-radius: 4px; }
