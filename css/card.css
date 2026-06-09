@@ -297,7 +297,44 @@ transition: all .18s;
         }
         .reason-other-input:focus { border-color: #1890ff; }
 
-        /* 内联展开区 */
+        /* 剔除原因多选区（底部 action bar 内联） */
+        .reject-reason-box {
+            width: 100%;
+            border: 1px solid #ffd8bf;
+            border-radius: 6px;
+            background: #fff7e6;
+            overflow: hidden;
+            margin-bottom: 8px;
+        }
+        .reject-reason-body {
+            padding: 8px 12px;
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+            max-height: 180px;
+            overflow-y: auto;
+        }
+        .reject-check-item {
+            display: flex; align-items: center; gap: 8px;
+            padding: 5px 8px;
+            border-radius: 4px;
+            font-size: 12px; color: #595959;
+            cursor: pointer; transition: background .15s;
+        }
+        .reject-check-item:hover { background: #ffe7ba; }
+        .reject-check-item input[type="checkbox"] {
+            width: 14px; height: 14px; flex-shrink: 0;
+            accent-color: #fa8c16; cursor: pointer;
+        }
+        .reject-check-item.other { border-top: 1px dashed #ffd8bf; margin-top: 2px; padding-top: 6px; }
+        .reject-other-input {
+            margin-left: 22px; margin-top: 2px;
+            padding: 4px 8px; border: 1px solid #d9d9d9;
+            border-radius: 4px; font-size: 12px; width: calc(100% - 30px);
+            outline: none;
+        }
+        .reject-other-input:focus { border-color: #fa8c16; }
+
         .card-expand {
             display: none;
             margin-top: 10px;
@@ -385,16 +422,9 @@ transition: all .18s;
             display: flex; gap: 8px; margin-top: 10px; align-items: center;
             padding-top: 10px;
             border-top: 1px dashed #eef0f4;
+            flex-wrap: wrap;
         }
         /* 编辑模式 — 底部按钮区 */
-        .annot-card.editing .annot-actions {
-            border-top: 1px dashed #eef0f4;
-            padding-top: 10px;
-        }
-        .annot-card.editing .annot-actions button {
-            padding: 5px 16px;
-            font-size: 13px;
-        }
         .annot-card.confirmed .annot-actions,
         .annot-card.rejected .annot-actions { border-top-color: transparent; padding-top: 6px; }
         .confirmed-mark {
