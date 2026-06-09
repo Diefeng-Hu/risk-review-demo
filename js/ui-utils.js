@@ -66,11 +66,34 @@ function showFloatToast(msg) {
             card.classList.add(newType);
             card.dataset.type = newType;
             sel.className = `card-type-select ${newType}`;
-            // 同步展开区的风险类型 select（如果存在）
-            const expSel = card.querySelector('.expand-select.type-select');
-            if (expSel) expSel.value = newType;
-            // 同步 ASR/OCR 行的颜色
             renderVideoSegments?.();
             updateBadgeCounts?.();
             showFloatToast?.(`已切换为 ${typeLabel[newType] || newType}`);
         });
+
+        // 违规理由多选 checkbox + 其他输入框联动
+        document.addEventListener('change', e => {
+            const cb = e.target.closest('.reason-check');
+            if (!cb) return;
+            const multi = cb.closest('.reason-multi');
+            if (!multi) return;
+            const isOther = cb.classList.contains('other-check');
+            const otherInput = multi.querySelector('.reason-other-input');
+            if (isOther) {
+                if (otherInput) otherInput.style.display = cb.checked ? '' : 'none';
+                if (cb.checked && otherInput) setTimeout(() => otherInput.focus(), 50);
+            }
+            // 更新计数
+            const count = multi.querySelectorAll('.reason-check:checked').length;
+            const badge = multi.querySelector('.reason-count');
+            if (badge) badge.textContent = count;
+        });
+        // 其他输入框失去焦点时自动勾选「其他」
+        document.addEventListener('blur', e => {
+            const inp = e.target.closest('.reason-other-input');
+            if (!inp) return;
+            const multi = inp.closest('.reason-multi');
+            if (!multi) return;
+            const otherCb = multi.querySelector('.other-check');
+            if (otherCb && inp.value.trim()) otherCb.checked = true;
+        }, true);
