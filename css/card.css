@@ -273,8 +273,9 @@ transition: all .18s;
         }
         .reason-multi-body {
             padding: 8px 12px;
-            display: flex; flex-direction: column; gap: 4px;
-            max-height: 220px; overflow-y: auto;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 4px 12px;
         }
         .reason-check-item {
             display: flex; align-items: center; gap: 8px;
@@ -297,27 +298,39 @@ transition: all .18s;
         }
         .reason-other-input:focus { border-color: #1890ff; }
 
-        /* 剔除原因多选区（底部 action bar 内联） */
-        .reject-reason-box {
-            width: 100%;
+        /* 剔除原因快捷区（底部 action bar 内联） */
+        .reject-quick-area { width: 100%; margin-bottom: 8px; }
+        .reject-quick-tags {
+            display: flex; gap: 6px; flex-wrap: wrap;
+        }
+        .reject-quick-tag {
+            padding: 3px 10px; border-radius: 4px;
+            border: 1px solid #ffa39e; background: #fff1f0;
+            color: #ff4d4f; font-size: 12px; cursor: pointer;
+            transition: all .15s; font-weight: 500;
+        }
+        .reject-quick-tag:hover {
+            background: #ff4d4f; color: #fff; border-color: #ff4d4f;
+            box-shadow: 0 2px 6px rgba(255,77,79,.25);
+        }
+        .reject-more-toggle {
+            display: inline-block; margin-top: 6px;
+            font-size: 11px; color: #999; cursor: pointer;
+            padding: 2px 6px; border-radius: 3px;
+        }
+        .reject-more-toggle:hover { background: #fff1f0; color: #ff4d4f; }
+        .reject-more-body {
+            margin-top: 6px;
+            padding: 8px 12px;
             border: 1px solid #ffd8bf;
             border-radius: 6px;
             background: #fff7e6;
-            overflow: hidden;
-            margin-bottom: 8px;
-        }
-        .reject-reason-body {
-            padding: 8px 12px;
-            display: flex;
-            flex-direction: column;
-            gap: 4px;
-            max-height: 180px;
-            overflow-y: auto;
+            display: flex; flex-direction: column; gap: 4px;
+            max-height: 180px; overflow-y: auto;
         }
         .reject-check-item {
             display: flex; align-items: center; gap: 8px;
-            padding: 5px 8px;
-            border-radius: 4px;
+            padding: 5px 8px; border-radius: 4px;
             font-size: 12px; color: #595959;
             cursor: pointer; transition: background .15s;
         }
