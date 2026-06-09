@@ -77,7 +77,7 @@ function renderCard(c) {
     const reasonDisplay = selectedReasons.length > 0
         ? '违规理由：' + selectedReasons.slice(0, 3).join('、') + (selectedReasons.length > 3 ? ` 等${selectedReasons.length}项` : '')
         : '违规理由：点击选择';
-    const reasonHtml = `<div class="reason-multi collapsed" data-id="${c.id}">
+    const reasonHtml = `<div class="reason-multi ${selectedReasons.length > 0 ? 'collapsed' : ''}" data-id="${c.id}" data-collapsed="${selectedReasons.length > 0 ? '1' : ''}">
         <div class="reason-multi-head" onclick="this.closest('.reason-multi').classList.toggle('collapsed')">${reasonDisplay}</div>
         <div class="reason-multi-body">
             ${reasonCheckHtml}
@@ -105,7 +105,7 @@ function renderCard(c) {
         <div class="annot-card ${c.type}${confirmedCls}${focusCls}" data-id="${c.id}" data-type="${c.type}">
             <div class="card-head">
                 <span class="card-id">${c.idx}</span>
-                <span class="card-time" contenteditable="true" title="点击跳转，双击编辑时间">${c.timeRange}</span>
+                <span class="card-time" title="点击跳转，双击编辑时间">${c.timeRange}</span>
                 ${typeSelect}
                 <span class="spacer"></span>
             </div>
