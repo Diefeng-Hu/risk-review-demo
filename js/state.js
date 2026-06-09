@@ -102,31 +102,48 @@
             const actions = card.querySelector('.annot-actions');
             if (!actions) return;
             const old = actions.innerHTML;
-            const templates = ['AI 误判', '原文无违规', '已在其他卡片覆盖', '时间段不准', '类型分类错误', '截图不清晰'];
+            const checkHtml = REJECT_PRESETS.map(r =>
+                `<label class="reject-check-item"><input type="checkbox" class="reject-check" value="${r}"><span>${r}</span></label>`
+            ).join('');
             actions.innerHTML = `
-                <select class="reject-template" style="padding:3px 6px;border:1px solid #ff7875;border-radius:3px;font-size:12px;outline:none;background:#fff;">
-                    <option value="">— 选择常用原因 —</option>
-                    ${templates.map(t => `<option value="${t}">${t}</option>`).join('')}
-                </select>
-                <input type="text" class="inline-prompt reject-reason-input" placeholder="${placeholder}" style="flex:1;padding:3px 8px;border:1px solid #ff7875;border-radius:3px;font-size:12px;outline:none;">
+                <div class="reject-reason-box">
+                    <div class="reject-reason-body">
+                        ${checkHtml}
+                        <label class="reject-check-item other"><input type="checkbox" class="reject-check other-check" value="__other__"><span>其他</span></label>
+                        <input type="text" class="reject-other-input" placeholder="补充其他原因…" style="display:none;">
+                    </div>
+                </div>
                 <button class="action-btn reject confirm-reject">确认剔除</button>
                 <button class="action-btn cancel-prompt">取消</button>
             `;
-            const inp = actions.querySelector('.inline-prompt');
-            const tpl = actions.querySelector('.reject-template');
-            tpl.onchange = e => { e.stopPropagation(); if (tpl.value) { inp.value = tpl.value; inp.focus(); } };
-            inp.focus();
+            const box = actions.querySelector('.reject-reason-box');
+            const otherInput = actions.querySelector('.reject-other-input');
+            // 其他 checkbox 联动
+            box.querySelectorAll('.reject-check.other-check').forEach(cb => {
+                cb.addEventListener('change', () => {
+                    otherInput.style.display = cb.checked ? '' : 'none';
+                    if (cb.checked) setTimeout(() => otherInput.focus(), 50);
+                });
+            });
+            // 其他输入框有内容时自动勾选
+            otherInput.addEventListener('input', () => {
+                const cb = box.querySelector('.reject-check.other-check');
+                if (cb && otherInput.value.trim() && !cb.checked) cb.checked = true;
+            });
             actions.querySelector('.confirm-reject').onclick = e => {
                 e.stopPropagation();
-                onSubmit(inp.value.trim() || '未填写');
+                const checked = Array.from(box.querySelectorAll('.reject-check:checked')).map(cb => cb.value);
+                const otherText = otherInput.value.trim();
+                const reasons = checked.filter(v => v !== '__other__');
+                if (otherText) reasons.push(otherText);
+                onSubmit(reasons.join('、') || '未填写');
             };
             actions.querySelector('.cancel-prompt').onclick = e => {
                 e.stopPropagation();
                 actions.innerHTML = old;
                 bindCardActions(card);
             };
-            inp.addEventListener('keydown', e => {
-                if (e.key === 'Enter') { e.preventDefault(); actions.querySelector('.confirm-reject').click(); }
+            actions.addEventListener('keydown', e => {
                 if (e.key === 'Escape') { e.preventDefault(); actions.querySelector('.cancel-prompt').click(); }
             });
         }
