@@ -89,9 +89,9 @@ function renderCard(c) {
     // Actions
     let actionsHtml;
     if (c.confirmed) {
-        actionsHtml = `<button class="action-btn edit">✎ 编辑</button><button class="action-btn reject">↺ 撤销</button>`;
+        actionsHtml = `<button class="action-btn undo">↺ 撤销</button>`;
     } else {
-        actionsHtml = `<button class="action-btn accept">✓ 接受</button><button class="action-btn edit">✎ 编辑</button><button class="action-btn reject">✗ 剔除</button>`;
+        actionsHtml = `<button class="action-btn accept">✓ 接受</button><button class="action-btn reject">✗ 剔除</button>`;
     }
 
     const typeOptions = Object.entries(RISK_TYPE_MAP).map(([val, label]) =>
