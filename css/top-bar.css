@@ -130,6 +130,6 @@ padding: 0 14px;
         .main-layout {
             display: flex;
             height: calc(100vh - 76px);
-            padding-bottom: 40px;
+            padding-bottom: 48px;
             box-sizing: border-box;
             transition: padding-bottom .25s ease;
