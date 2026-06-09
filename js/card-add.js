@@ -39,7 +39,7 @@
                         <div class="original-text">
                             <span class="label">原文：</span><span contenteditable="true" style="outline:none;border-bottom:1px dashed #1890ff;padding:0 4px;">${textVal}</span>
                         </div>
-                        <div class="reason-multi collapsed" data-id="${newId}">
+                        <div class="reason-multi" data-id="${newId}">
                             <div class="reason-multi-head" onclick="this.closest('.reason-multi').classList.toggle('collapsed')">违规理由 <span class="reason-count">0</span></div>
                             <div class="reason-multi-body">
                                 ${reasonCheckHtml}
@@ -72,30 +72,7 @@
                     showFloatToast('🗑 已删除');
                 });
             });
-            card.querySelector('.card-type-select')?.addEventListener('change', e => {
-                const v = e.target.value;
-                card.classList.remove('text', 'voice', 'scene', 'abnormal');
-                card.classList.add(v);
-                e.target.className = `card-type-select ${v}`;
-            });
-            // 新增卡片的多选理由 checkbox 联动
-            card.querySelectorAll('.reason-check').forEach(cb => {
-                cb.addEventListener('change', () => {
-                    const multi = cb.closest('.reason-multi');
-                    const otherInput = multi?.querySelector('.reason-other-input');
-                    if (cb.classList.contains('other-check') && otherInput) {
-                        otherInput.style.display = cb.checked ? '' : 'none';
-                        if (cb.checked) setTimeout(() => otherInput.focus(), 50);
-                    }
-                    const count = multi?.querySelectorAll('.reason-check:checked').length || 0;
-                    const badge = multi?.querySelector('.reason-count');
-                    if (badge) badge.textContent = count;
-                });
-            });
-            card.addEventListener('click', () => {
-                document.querySelectorAll('.annot-card').forEach(c => c.classList.remove('focus-current'));
-                card.classList.add('focus-current');
-            });
+            // type-select 和 reason-check 联动由 ui-utils.js 事件委托处理，无需重复绑定
 
             // 滚动到新卡片，聚焦原文输入
             setTimeout(() => {
