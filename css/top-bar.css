@@ -129,7 +129,8 @@ padding: 0 14px;
         /* ============ 主布局 ============ */
         .main-layout {
             display: flex;
-            height: calc(100vh - 76px);
+            flex: 1;
+            min-height: 0;
             padding-bottom: 48px;
             box-sizing: border-box;
             transition: padding-bottom .25s ease;
