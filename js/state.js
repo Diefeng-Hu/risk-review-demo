@@ -39,22 +39,15 @@
             });
         });
 
-        // 4) 接受/编辑/剔除按钮 → 切换为「已处理」状态
+        // 4) 接受/剔除按钮 → 切换为「已处理」状态
         function setCardState(card, state, extra) {
-            // state: 'accepted' | 'rejected' | 'pending' | 'editing'
+            // state: 'accepted' | 'rejected' | 'pending'
             card.classList.remove('confirmed', 'rejected', 'editing');
             card.querySelectorAll('.status-badge').forEach(b => b.remove());
             card.querySelectorAll('.reject-reason-tip').forEach(b => b.remove());
             const actions = card.querySelector('.annot-actions');
             const head = card.querySelector('.card-head');
             const spacer = head?.querySelector('.spacer');
-            // 关闭编辑态
-            card.querySelectorAll('[data-editable="1"]').forEach(el => {
-                el.contentEditable = 'false';
-                el.style.background = '';
-                el.style.outline = '';
-                el.removeAttribute('data-editable');
-            });
 
             if (state === 'accepted') {
                 card.classList.add('confirmed');
@@ -86,52 +79,8 @@
                     const reasonHtml = extra?.reason ? `<span class="reject-reason-tip" style="font-size:11px;color:#999;margin-left:6px;">原因：${extra.reason}</span>` : '';
                     actions.innerHTML = '<button class="action-btn undo">↺ 撤销</button>' + reasonHtml;
                 }
-            } else if (state === 'editing') {
-                card.classList.add('editing');
-                // 原文区：只加虚线视觉，不可编辑
-                const orig = card.querySelector('.original-text');
-                if (orig) {
-                    orig.contentEditable = 'false';
-                    orig.removeAttribute('data-editable');
-                    orig.style.cssText = '';
-                }
-                // 违规理由：替换为 input + 铅笔图标
-                const reasonRow = card.querySelector('.reason-row');
-                if (reasonRow) {
-                    const currentText = reasonRow.querySelector('.reason-text')?.textContent?.trim() || '';
-                    // 隐藏原始文本
-                    const rt = reasonRow.querySelector('.reason-text');
-                    if (rt) rt.style.display = 'none';
-                    // 隐藏点击编辑铅笔
-                    const origEi = reasonRow.querySelector('.edit-icon');
-                    if (origEi) origEi.style.display = 'none';
-                    // 插入可编辑 input
-                    let inp = reasonRow.querySelector('.reason-input');
-                    if (!inp) {
-                        inp = document.createElement('input');
-                        inp.type = 'text';
-                        inp.className = 'reason-input';
-                        if (rt) { reasonRow.insertBefore(inp, rt.nextSibling); }
-                        else { reasonRow.appendChild(inp); }
-                    }
-                    inp.value = currentText;
-                    inp.style.display = '';
-                    inp.placeholder = '格式：时间段：违规理由；时间段：违规理由  例如：1-3：暗示壮阳；1:32-1:34：夸大功效';
-                    // 尾部展示铅笔图标（装饰，不可点击）
-                    let decoIcon = reasonRow.querySelector('.deco-icon');
-                    if (!decoIcon) {
-                        decoIcon = document.createElement('span');
-                        decoIcon.className = 'deco-icon';
-                        decoIcon.textContent = '✎';
-                        decoIcon.style.pointerEvents = 'none';
-                        reasonRow.appendChild(decoIcon);
-                    }
-                    decoIcon.style.display = '';
-                    setTimeout(() => inp.focus(), 50);
-                }
-                if (actions) actions.innerHTML = '<button class="action-btn accept save">✓ 保存编辑</button><button class="action-btn cancel">× 取消</button>';
             } else {
-                if (actions) actions.innerHTML = '<button class="action-btn accept">✓ 接受</button><button class="action-btn edit">✎ 编辑</button><button class="action-btn reject">✗ 剔除</button>';
+                if (actions) actions.innerHTML = '<button class="action-btn accept">✓ 接受</button><button class="action-btn reject">✗ 剔除</button>';
             }
             bindCardActions(card);
             showProgress();
@@ -183,52 +132,11 @@
         }
         function bindCardActions(card) {
             card.querySelectorAll('.action-btn.accept').forEach(b => {
-                if (b.classList.contains('save')) {
-                    b.onclick = e => {
-                        e.stopPropagation();
-                        // 将 input 内容写回 reason-text，然后恢复显示
-                        const inp = card.querySelector('.reason-input');
-                        const rt = card.querySelector('.reason-text');
-                        const decoIcon = card.querySelector('.deco-icon');
-                        if (inp && rt) {
-                            if (inp.value.trim()) rt.textContent = inp.value.trim();
-                            inp.style.display = 'none';
-                            rt.style.display = '';
-                        }
-                        if (decoIcon) decoIcon.style.display = 'none';
-                        setCardState(card, 'accepted');
-                        showFloatToast('✓ 编辑已保存并接受');
-                        focusNextPending(card);
-                    };
-                } else {
-                    b.onclick = e => {
-                        e.stopPropagation();
-                        setCardState(card, 'accepted');
-                        showFloatToast('✓ 已接受');
-                        focusNextPending(card);
-                    };
-                }
-            });
-            card.querySelectorAll('.action-btn.edit').forEach(b => {
                 b.onclick = e => {
                     e.stopPropagation();
-                    setCardState(card, 'editing');
-                    showFloatToast('✎ 进入编辑模式，修改后点保存');
-                };
-            });
-            card.querySelectorAll('.action-btn.cancel').forEach(b => {
-                b.onclick = e => {
-                    e.stopPropagation();
-                    // 取消：恢复 reason-text 显示，隐藏 input 和装饰图标
-                    const inp = card.querySelector('.reason-input');
-                    const rt = card.querySelector('.reason-text');
-                    const origEi = card.querySelector('.reason-row .edit-icon');
-                    const decoIcon = card.querySelector('.deco-icon');
-                    if (inp) inp.style.display = 'none';
-                    if (rt) rt.style.display = '';
-                    if (origEi) origEi.style.display = '';
-                    if (decoIcon) decoIcon.style.display = 'none';
-                    setCardState(card, 'pending');
+                    setCardState(card, 'accepted');
+                    showFloatToast('✓ 已接受');
+                    focusNextPending(card);
                 };
             });
             card.querySelectorAll('.action-btn.reject').forEach(b => {
@@ -244,25 +152,8 @@
             card.querySelectorAll('.action-btn.undo').forEach(b => {
                 b.onclick = e => { e.stopPropagation(); setCardState(card, 'pending'); showFloatToast('↺ 已撤销'); };
             });
-            // 编辑图标 ✎ 点击 = 编辑按钮
-            card.querySelectorAll('.edit-icon').forEach(ic => {
-                ic.onclick = e => {
-                    e.stopPropagation();
-                    if (card.classList.contains('confirmed') || card.classList.contains('rejected')) {
-                        setCardState(card, 'pending');
-                    }
-                    setCardState(card, 'editing');
-                };
-            });
         }
-        // 初始：把现有静态的 ✎ 编辑按钮加上 .edit class（HTML 里没写）
-        document.querySelectorAll('.annot-actions').forEach(a => {
-            a.querySelectorAll('button.action-btn').forEach(b => {
-                const txt = b.textContent.trim();
-                if (txt.includes('编辑')) b.classList.add('edit');
-            });
-        });
-        // 绑定卡片操作事件（必须在加完 .edit class 之后调用）
+        // 绑定卡片操作事件
         document.querySelectorAll('.annot-card').forEach(c => bindCardActions(c));
         // 初始已接受/已剔除卡片应用样式
         document.querySelectorAll('.annot-card.confirmed').forEach(c => setCardState(c, 'accepted'));
