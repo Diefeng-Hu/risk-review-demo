@@ -4,7 +4,8 @@ padding: 0 14px;
             position: relative;
             z-index: 10;
             white-space: nowrap;
-            overflow: hidden;
+            flex-wrap: wrap;
+            min-height: 36px;
         }
         .top-bar .title {
             font-size: 13px;
@@ -33,17 +34,18 @@ padding: 0 14px;
         .top-bar .meta-group {
             display: flex;
             align-items: center;
-            gap: 8px;
+            gap: 6px;
             font-size: 11px;
             color: #6b7280;
             flex-shrink: 0;
         }
         .top-bar .meta-group .meta-item {
-            display: inline-flex; align-items: center; gap: 3px;
-            padding: 2px 6px; border-radius: 4px;
+            display: inline-flex; align-items: center; gap: 2px;
+            padding: 1px 4px; border-radius: 3px;
             background: #f8fafc;
             border: 1px solid #eef0f4;
             white-space: nowrap;
+            font-size: 10px;
         }
         .meta-item .num { color: #ff4d4f; font-weight: 700; }
         .meta-item .countdown { color: #fff; font-weight: 700; background: #ff4d4f; padding: 1px 6px; border-radius: 8px; font-size: 11px; animation: pulse 1.4s infinite; }
@@ -127,7 +129,7 @@ padding: 0 14px;
         /* ============ 主布局 ============ */
         .main-layout {
             display: flex;
-            height: calc(100vh - 40px);
+            height: calc(100vh - 76px);
             padding-bottom: 40px;
             box-sizing: border-box;
             transition: padding-bottom .25s ease;
