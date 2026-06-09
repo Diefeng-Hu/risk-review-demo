@@ -74,8 +74,11 @@ function renderCard(c) {
         return `<label class="reason-check-item"><input type="checkbox" class="reason-check" value="${r}" ${checked}><span>${r}</span></label>`;
     }).join('');
     const otherText = selectedReasons.find(r => !REASON_PRESETS.includes(r)) || '';
+    const reasonDisplay = selectedReasons.length > 0
+        ? selectedReasons.slice(0, 3).join('、') + (selectedReasons.length > 3 ? ` 等${selectedReasons.length}项` : '')
+        : '点击选择违规理由';
     const reasonHtml = `<div class="reason-multi collapsed" data-id="${c.id}">
-        <div class="reason-multi-head" onclick="this.closest('.reason-multi').classList.toggle('collapsed')">违规理由 <span class="reason-count">${selectedReasons.length}</span></div>
+        <div class="reason-multi-head" onclick="this.closest('.reason-multi').classList.toggle('collapsed')">${reasonDisplay}</div>
         <div class="reason-multi-body">
             ${reasonCheckHtml}
             <label class="reason-check-item other"><input type="checkbox" class="reason-check other-check" value="__other__" ${otherText ? 'checked' : ''}><span>其他</span></label>
