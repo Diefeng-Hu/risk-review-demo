@@ -105,7 +105,7 @@ function renderCard(c) {
         <div class="annot-card ${c.type}${confirmedCls}${focusCls}" data-id="${c.id}" data-type="${c.type}">
             <div class="card-head">
                 <span class="card-id">${c.idx}</span>
-                <span class="card-time" title="点击跳转">▶ ${c.timeRange}</span>
+                <span class="card-time" contenteditable="true" title="点击跳转，双击编辑时间">${c.timeRange}</span>
                 ${typeSelect}
                 <span class="spacer"></span>
             </div>
