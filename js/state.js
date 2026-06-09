@@ -1,77 +1,4 @@
 // Step 3 脚本：卡片交互
-        // 1) 修改分类展开 / 收起
-        function ensureCardExpand(card) {
-            let expand = card.querySelector('.card-expand');
-            if (expand) return expand;
-            // 自动按 data-type 生成展开区
-            const type = card.dataset.type || 'voice';
-            const typeLabel = type === 'voice' ? '语音文字' : type === 'text' ? '画面文字' : '画面本身';
-            expand = document.createElement('div');
-            expand.className = 'card-expand';
-            expand.innerHTML = `
-                <div class="expand-row">
-                    <span class="label">风险类型：</span>
-                    <select class="expand-select">
-                        <option ${type==='voice'?'selected':''}>语音文字</option>
-                        <option ${type==='text'?'selected':''}>画面文字</option>
-                        <option ${type==='scene'?'selected':''}>画面本身</option>
-                                    <option>视频异常</option>
-                    </select>
-                </div>
-                <div class="expand-row">
-                    <span class="label">风险域：</span>
-                    <select class="expand-select" style="min-width:130px;">
-                        <option selected>大模型精细化-严口径</option>
-                        <option>禁推病症</option>
-                    </select>
-                    <select class="expand-select" style="min-width:90px;">
-                        <option>低俗</option>
-                        <option>黑五类</option>
-                        <option>软色情</option>
-                        <option selected>保证性承诺</option>
-                    </select>
-                </div>
-                <div class="expand-row">
-                    <span class="label">常用：</span>
-                    <div class="quick-tags">
-                        <span class="quick-tag active">夸大功效</span>
-                        <span class="quick-tag">疗效保证</span>
-                        <span class="quick-tag">绝对化用语</span>
-                        <span class="quick-tag">虚假赠送</span>
-                                    <span class="quick-tag combine">结合画面本身</span>
-                                    <span class="quick-tag combine">结合语音文字</span>
-                                    <span class="quick-tag combine">结合画面文字</span>
-                                </div>
-                </div>
-                <div class="expand-row">
-                    <span class="label">修改方向：</span>
-                    <input type="text" class="expand-input" placeholder="请填写修改方向 / 整改建议…">
-                </div>
-            `;
-            // 插入到 card-body 之后、annot-actions 之前
-            const actions = card.querySelector('.annot-actions');
-            if (actions) card.insertBefore(expand, actions);
-            else card.appendChild(expand);
-            // 新增的 quick-tag 也绑定互斥逻辑
-            expand.querySelectorAll('.quick-tag').forEach(tag => {
-                tag.addEventListener('click', () => {
-                    expand.querySelectorAll('.quick-tag').forEach(t => t.classList.remove('active'));
-                    tag.classList.add('active');
-                });
-            });
-            return expand;
-        }
-        document.querySelectorAll('.expand-toggle').forEach(toggle => {
-            toggle.addEventListener('click', e => {
-                e.stopPropagation();
-                const card = toggle.closest('.annot-card');
-                if (!card) return;
-                const expand = ensureCardExpand(card);
-                expand.classList.toggle('show');
-                toggle.textContent = expand.classList.contains('show') ? '▲ 收起分类' : '⚙ 修改分类';
-            });
-        });
-
         // 2) 快捷标签 → 自动写入违规理由
         document.querySelectorAll('.quick-tags').forEach(tags => {
             tags.querySelectorAll('.quick-tag').forEach(tag => {
@@ -96,8 +23,8 @@
         // 3) 卡片点击聚焦 + 自动跳转到对应视频时间
         document.querySelectorAll('.annot-card').forEach(card => {
             card.addEventListener('click', (e) => {
-                // 忽略按钮、可编辑区域、链接的点击
-                if (e.target.closest('button, a, [contenteditable="true"], input, textarea, select, .expand-toggle, .edit-icon, .quick-tag, .reject-reason-input')) {
+                // 忽略按钮、可编辑区域、链接、checkbox、reason-multi 的点击
+                if (e.target.closest('button, a, [contenteditable="true"], input, textarea, select, .reason-multi, .quick-tag, .reject-reason-input')) {
                     return;
                 }
                 document.querySelectorAll('.annot-card').forEach(c => c.classList.remove('focus-current'));
@@ -136,7 +63,6 @@
                 card.classList.remove('flash-accept');
                 void card.offsetWidth;
                 card.classList.add('flash-accept');
-                card.querySelector('.card-expand')?.classList.remove('show');
                 if (head) {
                     const badge = document.createElement('span');
                     badge.className = 'status-badge accepted';
@@ -150,7 +76,6 @@
                 card.classList.remove('flash-reject');
                 void card.offsetWidth;
                 card.classList.add('flash-reject');
-                card.querySelector('.card-expand')?.classList.remove('show');
                 if (head) {
                     const badge = document.createElement('span');
                     badge.className = 'status-badge rejected';
@@ -163,7 +88,6 @@
                 }
             } else if (state === 'editing') {
                 card.classList.add('editing');
-                card.querySelector('.card-expand')?.classList.remove('show');
                 // 原文区：只加虚线视觉，不可编辑
                 const orig = card.querySelector('.original-text');
                 if (orig) {
