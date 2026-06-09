@@ -1,4 +1,5 @@
-simulatedTime = Math.max(0, Math.min(TOTAL_SECONDS, timeSec));
+function updateProgressUI(timeSec) {
+            simulatedTime = Math.max(0, Math.min(TOTAL_SECONDS, timeSec));
             const m = Math.floor(simulatedTime / 60);
             const s = Math.floor(simulatedTime % 60);
             const tc = document.getElementById('time-current');
@@ -156,84 +157,67 @@ simulatedTime = Math.max(0, Math.min(TOTAL_SECONDS, timeSec));
         };
 
         // ============ 视频截取模式 ============
-        let clipMode = false;      // 是否在截取模式
-        let clipStart = null;      // 截取起点秒数
-        let clipMarkerStart = null; // 起点 DOM 标记
-        let clipMarkerEnd = null;   // 终点 DOM 标记
-        let clipRangeBar = null;   // 范围高亮条
-        let clipHint = null;       // 提示文字
+        let clipMode = false, clipStart = null;
+        let clipMarkerStart = null, clipMarkerEnd = null, clipRangeBar = null, clipHint = null;
 
         function formatSec(sec) {
-            const m = Math.floor(sec / 60);
-            const s = Math.floor(sec % 60);
+            const m = Math.floor(sec / 60), s = Math.floor(sec % 60);
             return `${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
         }
-
         function clearClipUI() {
             clipMarkerStart?.remove(); clipMarkerStart = null;
             clipMarkerEnd?.remove(); clipMarkerEnd = null;
             clipRangeBar?.remove(); clipRangeBar = null;
             clipHint?.remove(); clipHint = null;
         }
-
         function exitClipMode() {
-            clipMode = false;
-            clipStart = null;
+            clipMode = false; clipStart = null;
             clearClipUI();
             document.querySelector('.vc-action.clip-active')?.classList.remove('clip-active');
         }
-
         function addClipMarker(sec, label) {
             const bar = document.getElementById('video-progress');
             if (!bar) return null;
             const marker = document.createElement('div');
             marker.className = 'clip-marker';
             marker.dataset.label = label;
-            marker.style.left = (sec / TOTAL_SECONDS * 100) + '%';
+            marker.style.cssText = `position:absolute;top:-4px;bottom:-4px;width:2px;background:#1890ff;z-index:4;pointer-events:none;left:${sec/TOTAL_SECONDS*100}%`;
             bar.appendChild(marker);
             return marker;
         }
-
         function updateClipRange(endSec) {
             if (!clipRangeBar && clipStart !== null) {
                 const bar = document.getElementById('video-progress');
                 if (!bar) return;
                 clipRangeBar = document.createElement('div');
-                clipRangeBar.className = 'clip-range-bar';
+                clipRangeBar.style.cssText = 'position:absolute;top:0;bottom:0;background:rgba(24,144,255,0.25);z-index:3;pointer-events:none;';
                 bar.appendChild(clipRangeBar);
             }
             if (clipRangeBar && clipStart !== null) {
-                const leftPct = Math.min(clipStart, endSec) / TOTAL_SECONDS * 100;
-                const rightPct = Math.max(clipStart, endSec) / TOTAL_SECONDS * 100;
-                clipRangeBar.style.left = leftPct + '%';
-                clipRangeBar.style.width = (rightPct - leftPct) + '%';
+                const l = Math.min(clipStart, endSec) / TOTAL_SECONDS * 100;
+                const r = Math.max(clipStart, endSec) / TOTAL_SECONDS * 100;
+                clipRangeBar.style.left = l + '%';
+                clipRangeBar.style.width = (r - l) + '%';
             }
             if (clipHint) {
-                const s = Math.min(clipStart, endSec);
-                const e = Math.max(clipStart, endSec);
+                const s = Math.min(clipStart, endSec), e = Math.max(clipStart, endSec);
                 clipHint.textContent = `${formatSec(s)} — ${formatSec(e)}`;
             }
         }
 
-        // 点击「视频截取」按钮
+        // 绑定「视频截取」按钮
         document.querySelectorAll('.vc-action').forEach(btn => {
             if (btn.textContent.trim() !== '视频截取') return;
             btn.addEventListener('click', e => {
                 e.stopPropagation();
-                if (clipMode) {
-                    exitClipMode();
-                    showFloatToast('✗ 已退出截取模式');
-                    return;
-                }
-                clipMode = true;
-                clipStart = null;
+                if (clipMode) { exitClipMode(); showFloatToast('✗ 已退出截取模式'); return; }
+                clipMode = true; clipStart = null;
                 btn.classList.add('clip-active');
                 clearClipUI();
-                // 显示提示
                 const bar = document.getElementById('video-progress');
                 if (bar) {
                     clipHint = document.createElement('div');
-                    clipHint.className = 'clip-hint';
+                    clipHint.style.cssText = 'position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);background:rgba(0,0,0,0.7);color:#fff;font-size:12px;padding:4px 12px;border-radius:4px;z-index:10;pointer-events:none;white-space:nowrap;';
                     clipHint.textContent = '点击进度条选取起点';
                     bar.appendChild(clipHint);
                 }
@@ -241,122 +225,56 @@ simulatedTime = Math.max(0, Math.min(TOTAL_SECONDS, timeSec));
             });
         });
 
-        // 进度条点击 → 截取逻辑
-        const origProgressClick = progressBar?.onclick;
+        // 进度条截取 click（capture 阶段优先）
         if (progressBar) {
-            // 重写 click：截取模式优先
             progressBar.addEventListener('click', function clipClick(e) {
-                if (!clipMode) return; // 非截取模式走原来的逻辑
-                e.stopPropagation();
+                if (!clipMode) return;
+                e.stopPropagation(); e.stopImmediatePropagation();
                 const rect = progressBar.getBoundingClientRect();
-                const pct = Math.max(0, Math.min(1, (e.clientX - rect.left) / rect.width));
-                const clickSec = Math.round(pct * TOTAL_SECONDS);
-
+                const clickSec = Math.round(Math.max(0, Math.min(1, (e.clientX - rect.left) / rect.width)) * TOTAL_SECONDS);
                 if (clipStart === null) {
-                    // 选取起点
                     clipStart = clickSec;
-                    stopSimulatedPlay();
-                    updateProgressUI(clickSec);
+                    stopSimulatedPlay(); updateProgressUI(clickSec);
                     clipMarkerStart = addClipMarker(clickSec, '起 ' + formatSec(clickSec));
                     if (clipHint) clipHint.textContent = '点击选取终点';
                     showFloatToast(`✂ 起点 ${formatSec(clickSec)} — 请点击终点`);
                 } else {
-                    // 选取终点 → 弹出类型菜单
-                    const endSec = clickSec;
-                    const startSec = Math.min(clipStart, endSec);
-                    const finalEndSec = Math.max(clipStart, endSec);
-                    stopSimulatedPlay();
-                    updateProgressUI(endSec);
-                    clipMarkerEnd = addClipMarker(endSec, '止 ' + formatSec(endSec));
-                    updateClipRange(endSec);
-                    if (clipHint) clipHint.remove(); clipHint = null;
-
-                    const timeRange = `${formatSec(startSec)}-${formatSec(finalEndSec)}`;
+                    const startSec = Math.min(clipStart, clickSec);
+                    const endSec = Math.max(clipStart, clickSec);
+                    stopSimulatedPlay(); updateProgressUI(clickSec);
+                    clipMarkerEnd = addClipMarker(clickSec, '止 ' + formatSec(clickSec));
+                    updateClipRange(clickSec);
+                    if (clipHint) { clipHint.remove(); clipHint = null; }
+                    const timeRange = `${formatSec(startSec)}-${formatSec(endSec)}`;
                     showFloatToast(`✂ 截取 ${timeRange}`);
-
-                    // 弹出类型选择菜单
+                    // 弹出类型菜单
                     let menu = document.getElementById('clip-type-menu');
                     if (menu) menu.remove();
                     menu = document.createElement('div');
                     menu.id = 'clip-type-menu';
-                    menu.style.cssText = `
-                        position: fixed; background: #fff; border: 1px solid #d9d9d9;
-                        border-radius: 6px; box-shadow: 0 6px 20px rgba(0,0,0,0.15);
-                        z-index: 200; padding: 6px; min-width: 150px;
-                    `;
-                    menu.style.left = e.clientX + 'px';
-                    menu.style.top = (e.clientY - 160) + 'px';
+                    menu.style.cssText = `position:fixed;background:#fff;border:1px solid #d9d9d9;border-radius:6px;box-shadow:0 6px 20px rgba(0,0,0,0.15);z-index:200;padding:6px;min-width:150px;left:${e.clientX}px;top:${e.clientY - 160}px`;
                     menu.innerHTML = `
                         <div style="padding:4px 10px;font-size:11px;color:#999;border-bottom:1px solid #f0f0f0;margin-bottom:4px;">截取 ${timeRange} · 选择风险类型</div>
-                        <div data-t="text" style="padding:6px 10px;cursor:pointer;font-size:12px;border-radius:3px;display:flex;align-items:center;gap:6px;">
-                            <span style="width:8px;height:8px;background:#1890ff;border-radius:2px;"></span>画面文字
-                        </div>
-                        <div data-t="voice" style="padding:6px 10px;cursor:pointer;font-size:12px;border-radius:3px;display:flex;align-items:center;gap:6px;">
-                            <span style="width:8px;height:8px;background:#1890ff;border-radius:2px;"></span>语音文字
-                        </div>
-                        <div data-t="scene" style="padding:6px 10px;cursor:pointer;font-size:12px;border-radius:3px;display:flex;align-items:center;gap:6px;">
-                            <span style="width:8px;height:8px;background:#1890ff;border-radius:2px;"></span>画面本身
-                        </div>
-                        <div data-t="abnormal" style="padding:6px 10px;cursor:pointer;font-size:12px;border-radius:3px;display:flex;align-items:center;gap:6px;">
-                            <span style="width:8px;height:8px;background:#faad14;border-radius:2px;"></span>视频异常
-                        </div>
-                        <div style="padding:4px 10px;font-size:11px;color:#ff4d4f;cursor:pointer;border-top:1px solid #f0f0f0;margin-top:4px;">取消截取</div>
-                    `;
-                    menu.querySelectorAll('div[data-t]').forEach(item => {
+                        <div data-t="text" style="padding:6px 10px;cursor:pointer;font-size:12px;border-radius:3px;display:flex;align-items:center;gap:6px;"><span style="width:8px;height:8px;background:#1890ff;border-radius:2px;"></span>画面文字</div>
+                        <div data-t="voice" style="padding:6px 10px;cursor:pointer;font-size:12px;border-radius:3px;display:flex;align-items:center;gap:6px;"><span style="width:8px;height:8px;background:#1890ff;border-radius:2px;"></span>语音文字</div>
+                        <div data-t="scene" style="padding:6px 10px;cursor:pointer;font-size:12px;border-radius:3px;display:flex;align-items:center;gap:6px;"><span style="width:8px;height:8px;background:#1890ff;border-radius:2px;"></span>画面本身</div>
+                        <div data-t="abnormal" style="padding:6px 10px;cursor:pointer;font-size:12px;border-radius:3px;display:flex;align-items:center;gap:6px;"><span style="width:8px;height:8px;background:#faad14;border-radius:2px;"></span>视频异常</div>
+                        <div data-cancel style="padding:4px 10px;font-size:11px;color:#ff4d4f;cursor:pointer;border-top:1px solid #f0f0f0;margin-top:4px;">取消截取</div>`;
+                    menu.querySelectorAll('[data-t]').forEach(item => {
                         item.addEventListener('mouseenter', () => item.style.background = '#e6f7ff');
                         item.addEventListener('mouseleave', () => item.style.background = '');
-                        item.addEventListener('click', () => {
-                            const t = item.getAttribute('data-t');
-                            menu.remove();
-                            addNewRiskCard(t, '', timeRange);
-                            exitClipMode();
-                        });
+                        item.addEventListener('click', () => { menu.remove(); addNewRiskCard(item.dataset.t, '', timeRange); exitClipMode(); });
                     });
-                    menu.querySelector('div[style*="color:#ff4d4f"]')?.addEventListener('click', () => {
-                        menu.remove();
-                        exitClipMode();
-                    });
+                    menu.querySelector('[data-cancel]')?.addEventListener('click', () => { menu.remove(); exitClipMode(); });
                     document.body.appendChild(menu);
                     setTimeout(() => {
-                        document.addEventListener('click', function closeClipMenu(ev) {
-                            if (!menu.contains(ev.target)) {
-                                menu.remove();
-                                exitClipMode();
-                                document.removeEventListener('click', closeClipMenu);
-                            }
+                        document.addEventListener('click', function closeMenu(ev) {
+                            if (!menu.contains(ev.target)) { menu.remove(); exitClipMode(); document.removeEventListener('click', closeMenu); }
                         });
                     }, 0);
                 }
-            }, true); // capture 优先于普通 click
-
-            // 截取模式下拖拽也更新范围
-            const origDrag = { mousedown: null, mousemove: null, mouseup: null };
-            progressBar.addEventListener('mousedown', function clipDrag(e) {
-                if (!clipMode || clipStart === null) return;
-                // 拖拽更新终点预览
-                const onMove = ev => {
-                    const rect = progressBar.getBoundingClientRect();
-                    const pct = Math.max(0, Math.min(1, (ev.clientX - rect.left) / rect.width));
-                    const sec = Math.round(pct * TOTAL_SECONDS);
-                    updateClipRange(sec);
-                    if (clipMarkerEnd) clipMarkerEnd.remove();
-                    clipMarkerEnd = addClipMarker(sec, '止 ' + formatSec(sec));
-                };
-                const onUp = () => {
-                    document.removeEventListener('mousemove', onMove);
-                    document.removeEventListener('mouseup', onUp);
-                };
-                document.addEventListener('mousemove', onMove);
-                document.addEventListener('mouseup', onUp);
-            });
+            }, true);
         }
 
-        // Esc 退出截取模式
-        document.addEventListener('keydown', e => {
-            if (e.key === 'Escape' && clipMode) {
-                exitClipMode();
-                showFloatToast('✗ 已退出截取模式');
-            }
-        });
-
-        // ============ 提交前质量自检 ============
+        // Esc 退出截取
+        document.addEventListener('keydown', e => { if (e.key === 'Escape' && clipMode) { exitClipMode(); showFloatToast('✗ 已退出截取模式'); } });
