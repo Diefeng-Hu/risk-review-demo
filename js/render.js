@@ -75,8 +75,8 @@ function renderCard(c) {
     }).join('');
     const otherText = selectedReasons.find(r => !REASON_PRESETS.includes(r)) || '';
     const reasonDisplay = selectedReasons.length > 0
-        ? selectedReasons.slice(0, 3).join('、') + (selectedReasons.length > 3 ? ` 等${selectedReasons.length}项` : '')
-        : '点击选择违规理由';
+        ? '违规理由：' + selectedReasons.slice(0, 3).join('、') + (selectedReasons.length > 3 ? ` 等${selectedReasons.length}项` : '')
+        : '违规理由：点击选择';
     const reasonHtml = `<div class="reason-multi collapsed" data-id="${c.id}">
         <div class="reason-multi-head" onclick="this.closest('.reason-multi').classList.toggle('collapsed')">${reasonDisplay}</div>
         <div class="reason-multi-body">
