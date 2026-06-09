@@ -119,8 +119,6 @@ function showProgress() {
                         // 展开违规理由多选区
                         const multi = card.querySelector('.reason-multi');
                         if (multi) multi.classList.remove('collapsed');
-                        const editBtn = card.querySelector('.action-btn.edit');
-                        if (editBtn) editBtn.click();
                         showFloatToast(`✎ 正在修改风险点 #${cardId.replace('card-', '')}`);
                     };
                     menu.appendChild(editItem);
