@@ -23,20 +23,30 @@
         // 3) 卡片点击聚焦 + 自动跳转到对应视频时间
         document.querySelectorAll('.annot-card').forEach(card => {
             card.addEventListener('click', (e) => {
-                // 忽略按钮、可编辑区域、链接、checkbox、reason-multi 的点击
-                if (e.target.closest('button, a, [contenteditable="true"], input, textarea, select, .reason-multi, .quick-tag, .reject-reason-input')) {
+                // 忽略按钮、可编辑区域正在编辑、链接、checkbox、reason-multi 的点击
+                if (e.target.closest('button, a, input, textarea, select, .reason-multi, .quick-tag, .reject-reason-input')) {
                     return;
                 }
+                // contenteditable 元素如果已获得焦点（正在编辑），不跳转
+                const ce = e.target.closest('[contenteditable="true"]');
+                if (ce && document.activeElement === ce) return;
                 document.querySelectorAll('.annot-card').forEach(c => c.classList.remove('focus-current'));
                 card.classList.add('focus-current');
                 // 自动跳转到该卡片的视频时间 + 进度条定位
                 const timeEl = card.querySelector('.card-time');
-                if (timeEl) {
+                if (timeEl && document.activeElement !== timeEl) {
                     const timeText = timeEl.textContent.trim().replace(/[▶\s]/g, '');
                     seekVideoTo(timeText);
                     showFloatToast(`⏯ 跳转到 ${timeEl.textContent.trim()}`);
                 }
             });
+        });
+        // 卡片时间编辑：回车确认退出编辑
+        document.addEventListener('keydown', e => {
+            if (e.key === 'Enter' && e.target.classList.contains('card-time')) {
+                e.preventDefault();
+                e.target.blur();
+            }
         });
 
         // 4) 接受/剔除按钮 → 切换为「已处理」状态
