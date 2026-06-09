@@ -18,14 +18,19 @@
             card.dataset.id = newId;
             card.dataset.type = t.cls;
             card.dataset.manual = '1';
+            const typeOptions = Object.entries(RISK_TYPE_MAP).map(([val, label]) =>
+                `<option value="${val}"${val === t.cls ? ' selected' : ''}>${label}</option>`
+            ).join('');
+            const reasonCheckHtml = REASON_PRESETS.map(r =>
+                `<label class="reason-check-item"><input type="checkbox" class="reason-check" value="${r}"><span>${r}</span></label>`
+            ).join('');
             card.innerHTML = `
                 <div class="card-head">
                     <span class="card-id">${totalIdx}</span>
                     <span class="card-time" contenteditable="true" title="点击编辑时间">${timeVal}</span>
-                    <span class="card-type-tag ${t.cls}">${t.label}</span>
+                    <select class="card-type-select ${t.cls}" data-id="${newId}">${typeOptions}</select>
                     <span style="font-size:10px;padding:1px 6px;border-radius:3px;background:#666;color:#fff;">人工</span>
                     <span class="spacer"></span>
-                    <span class="expand-toggle">⚙ 修改分类</span>
                     <span class="action-btn reject" style="padding:2px 8px;margin-left:6px;" title="删除此条">🗑</span>
                 </div>
                 <div class="card-body">
@@ -34,49 +39,14 @@
                         <div class="original-text">
                             <span class="label">原文：</span><span contenteditable="true" style="outline:none;border-bottom:1px dashed #1890ff;padding:0 4px;">${textVal}</span>
                         </div>
-                        <div class="reason-row">
-                            <span class="label">违规理由：</span>
-                            <span class="reason-text" contenteditable="true" style="outline:none;">点击输入违规理由（格式：1-3：违规理由；多段用全角分号分隔）</span>
-                            <span class="edit-icon" title="编辑">✎</span>
+                        <div class="reason-multi collapsed" data-id="${newId}">
+                            <div class="reason-multi-head" onclick="this.closest('.reason-multi').classList.toggle('collapsed')">违规理由 <span class="reason-count">0</span></div>
+                            <div class="reason-multi-body">
+                                ${reasonCheckHtml}
+                                <label class="reason-check-item other"><input type="checkbox" class="reason-check other-check" value="__other__"><span>其他</span></label>
+                                <input type="text" class="reason-other-input" placeholder="补充其他违规理由…" style="display:none">
+                            </div>
                         </div>
-                    </div>
-                </div>
-                <div class="card-expand show">
-                    <div class="expand-row">
-                        <span class="label">风险类型：</span>
-                        <select class="expand-select type-select">
-                            <option value="text" ${presetType==='text'?'selected':''}>画面文字</option>
-                            <option value="voice" ${presetType==='voice'?'selected':''}>语音文字</option>
-                            <option value="scene" ${presetType==='scene'?'selected':''}>画面本身</option>
-                            <option value="abnormal" ${presetType==='abnormal'?'selected':''}>视频异常</option>
-                        </select>
-                    </div>
-                    <div class="expand-row">
-                        <span class="label">风险域：</span>
-                        <select class="expand-select" style="min-width:130px;">
-                            <option>大模型精细化-严口径</option>
-                            <option>禁推病症</option>
-                        </select>
-                        <select class="expand-select" style="min-width:90px;">
-                            <option>低俗</option>
-                            <option>黑五类</option>
-                            <option>软色情</option>
-                            <option>保证性承诺</option>
-                            <option>绝对化用语</option>
-                        </select>
-                    </div>
-                    <div class="expand-row">
-                        <span class="label">常用：</span>
-                        <div class="quick-tags">
-                            <span class="quick-tag">壮阳暗示</span>
-                            <span class="quick-tag">疗效保证</span>
-                            <span class="quick-tag">夸大功效</span>
-                            <span class="quick-tag">软色情</span>
-                            <span class="quick-tag">绝对化用语</span>
-                                    <span class="quick-tag combine">结合画面本身</span>
-                                    <span class="quick-tag combine">结合语音文字</span>
-                                    <span class="quick-tag combine">结合画面文字</span>
-                                </div>
                     </div>
                 </div>
                 <div class="annot-actions">
@@ -88,15 +58,9 @@
             document.getElementById('cards-flow').appendChild(card);
 
             // 绑定交互
-            card.querySelector('.expand-toggle')?.addEventListener('click', e => {
-                e.stopPropagation();
-                const exp = card.querySelector('.card-expand');
-                exp.classList.toggle('show');
-            });
             card.querySelector('.action-btn.accept')?.addEventListener('click', e => {
                 e.stopPropagation();
                 setCardState(card, 'accepted');
-                card.querySelector('.card-expand')?.classList.remove('show');
                 showFloatToast('✓ 已新增风险点 ' + totalIdx);
             });
             card.querySelectorAll('.action-btn.reject').forEach(btn => {
@@ -108,22 +72,24 @@
                     showFloatToast('🗑 已删除');
                 });
             });
-            card.querySelector('.type-select')?.addEventListener('change', e => {
+            card.querySelector('.card-type-select')?.addEventListener('change', e => {
                 const v = e.target.value;
-                card.classList.remove('text', 'voice', 'scene');
+                card.classList.remove('text', 'voice', 'scene', 'abnormal');
                 card.classList.add(v);
-                const tag = card.querySelector('.card-type-tag');
-                tag.className = `card-type-tag ${v}`;
-                tag.textContent = types[v].label;
+                e.target.className = `card-type-select ${v}`;
             });
-            card.querySelectorAll('.quick-tag').forEach(t => {
-                t.addEventListener('click', () => {
-                    card.querySelectorAll('.quick-tag').forEach(x => x.classList.remove('active'));
-                    t.classList.add('active');
-                    const reason = card.querySelector('.reason-text');
-                    if (reason && (reason.textContent.includes('点击输入') || !reason.textContent.trim())) {
-                        reason.textContent = t.textContent;
+            // 新增卡片的多选理由 checkbox 联动
+            card.querySelectorAll('.reason-check').forEach(cb => {
+                cb.addEventListener('change', () => {
+                    const multi = cb.closest('.reason-multi');
+                    const otherInput = multi?.querySelector('.reason-other-input');
+                    if (cb.classList.contains('other-check') && otherInput) {
+                        otherInput.style.display = cb.checked ? '' : 'none';
+                        if (cb.checked) setTimeout(() => otherInput.focus(), 50);
                     }
+                    const count = multi?.querySelectorAll('.reason-check:checked').length || 0;
+                    const badge = multi?.querySelector('.reason-count');
+                    if (badge) badge.textContent = count;
                 });
             });
             card.addEventListener('click', () => {
