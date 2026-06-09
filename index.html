@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/svg+xml" href="favicon.svg">
     <title>风险定位标注 · AI 预标注校对</title>
     <link rel="stylesheet" href="css/base.css">
     <link rel="stylesheet" href="css/top-bar.css">
@@ -15,7 +16,7 @@
     <link rel="stylesheet" href="css/bottom-bar.css">
 </head>
 <body>
-    <!-- ============ 顶部操作栏 ============ -->
+    <!-- 顶部操作栏 -->
     <div class="top-bar">
         <span style="color:#94a3b8;cursor:pointer;font-size:16px;padding:0 2px;flex-shrink:0;" title="返回">‹</span>
         <div class="title">
@@ -34,7 +35,7 @@
         <button class="btn">打卡</button>
         <button class="btn">签出</button>
         <button class="btn">□ 挂起</button>
-        <button class="btn btn-success" id="pass-all-btn" style="padding:3px 12px;" title="整条视频无违规，整体通过（快捷键 A）">✓ 整条通过</button>
+        <button class="btn btn-success" id="pass-all-btn" style="padding:3px 12px;" title="整条视频无违规，整体通过">✓ 整条通过</button>
         <button class="btn btn-primary" style="padding:3px 12px;">✎ 审核 ›</button>
         <span class="top-icon" title="项目列表">📋</span>
         <span class="top-icon" title="通知">🔔</span>
@@ -45,78 +46,17 @@
         </div>
     </div>
 
-    <!-- ============ 主布局 ============ -->
+    <!-- 主布局 -->
     <div class="main-layout">
         <!-- 左侧：基本信息 -->
-        <div class="left-panel">
-            <div class="panel-title">基本信息</div>
-            <div class="info-row"><span class="info-label">客户名称</span><span class="info-value">长春市京起经贸有限公司</span></div>
-            <div class="info-row"><span class="info-label">信用代码</span><span class="info-value">91220100MAED4YAW4K</span></div>
-            <div class="info-row"><span class="info-label">行业类型</span><span class="info-value">快速消费品/日化用品</span></div>
-            <div class="info-row"><span class="info-label">产品名称</span><span class="info-value">芊美轻姿保健贴</span></div>
-            <div class="info-row"><span class="info-label">行业链接</span><a href="#" class="industry-link">app.kwaixiaodian.com/we...</a></div>
+        <div class="left-panel" id="left-panel"></div>
 
-            <div class="divider"></div>
-
-            <div class="panel-title">辅助信息</div>
-            <div class="info-row"><span class="info-label">账户类型</span><span class="info-value">直播</span></div>
-            <div class="info-row"><span class="info-label">授权关系</span><span class="info-value">—</span></div>
-            <div class="info-row"><span class="info-label">直播预热</span><span class="info-value">—</span></div>
-
-            <div class="divider"></div>
-
-            <div class="panel-title">备案批注</div>
-            <div style="font-size:11px; color:#666; line-height:1.6;">
-                <div style="font-weight:500;color:#333;margin-bottom:4px;">备案批注-已生效</div>
-                01 业务线：电商DSP；‖ 允许广告主与店铺主体不一致（有效期 2026-12-31）
-            </div>
-        </div>
-
-        <!-- 中央主区：左视频 + 右工作区 -->
+        <!-- 中央主区 -->
         <div class="center-area">
-            <!-- 左侧：ASR / OCR 侧栏（同时显示） -->
-            <div class="ref-side">
-                <div class="ref-side-section" data-pane="asr">
-                    <div class="ref-side-section-head">
-                        <span class="sec-title">📝 语音文字</span>
-                        <span class="badge-num">3</span>
-                        <span class="sec-spacer"></span>
-                        <span class="sec-collapse" title="折叠/展开">▾</span>
-                    </div>
-                    <div class="ref-side-section-body">
-                        <div class="asr-full">
-                            <div class="asr-row"><span class="row-check"></span><span class="ts">00:00</span><span class="text">大家好，欢迎来到我的直播间。</span><span class="asr-tag">正常</span></div>
-                            <div class="asr-row violation" data-card="card-1"><span class="row-check"></span><span class="ts">00:01</span><span class="text">"你 <span class="hl" data-card="card-1">使使劲啊</span>，没有啥不可能的。<span class="hl" data-card="card-1">三十分钟都做不到</span>的"</span><span class="asr-tag">违规</span></div>
-                            <div class="asr-row"><span class="row-check"></span><span class="ts">00:08</span><span class="text">看我手上这款产品，纯天然无添加。</span><span class="asr-tag">正常</span></div>
-                            <div class="asr-row violation" data-card="card-4"><span class="row-check"></span><span class="ts">00:11</span><span class="text">我们这是 <span class="hl" data-card="card-4">浓缩特效型</span> 的，<span class="hl" data-card="card-4">谁用谁知道</span>。</span><span class="asr-tag">违规</span></div>
-                            <div class="asr-row"><span class="row-check"></span><span class="ts">00:18</span><span class="text">下面给大家简单介绍一下使用方法。</span><span class="asr-tag">正常</span></div>
-                            <div class="asr-row"><span class="row-check"></span><span class="ts">00:22</span><span class="text">放心拍，包邮到家。</span><span class="asr-tag">正常</span></div>
-                            <div class="asr-row violation" data-card="card-7"><span class="row-check"></span><span class="ts">00:26</span><span class="text">现在下单 <span class="hl" data-card="card-7">免费送</span>，<span class="hl" data-card="card-7">绝对最低价</span>，错过就没有了。</span><span class="asr-tag">违规</span></div>
-                            <div class="asr-row"><span class="row-check"></span><span class="ts">00:32</span><span class="text">感谢大家的支持，我们下次直播再见。</span><span class="asr-tag">正常</span></div>
-                        </div>
-                    </div>
-                </div>
-                <div class="ref-side-divider"></div>
-                <div class="ref-side-section" data-pane="ocr">
-                    <div class="ref-side-section-head">
-                        <span class="sec-title">🔤 画面文字</span>
-                        <span class="badge-num">2</span>
-                        <span class="sec-spacer"></span>
-                        <span class="sec-collapse" title="折叠/展开">▾</span>
-                    </div>
-                    <div class="ref-side-section-body">
-                        <div class="ocr-list">
-                            <div class="ocr-row"><span class="row-check"></span><span class="ts">00:02</span><span class="text">主播头像 / 直播间标题</span><span class="ocr-tag">正常</span></div>
-                            <div class="ocr-row violation" data-card="card-2"><span class="row-check"></span><span class="ts">00:05</span><span class="text">画面字幕："最低价直降，错过等一年"</span><span class="ocr-tag">违规</span></div>
-                            <div class="ocr-row"><span class="row-check"></span><span class="ts">00:12</span><span class="text">商品包装文字：浓缩配方</span><span class="ocr-tag">正常</span></div>
-                            <div class="ocr-row violation" data-card="card-5"><span class="row-check"></span><span class="ts">00:20</span><span class="text">弹幕水印："官方授权 全网最低"</span><span class="ocr-tag">违规</span></div>
-                            <div class="ocr-row"><span class="row-check"></span><span class="ts">00:28</span><span class="text">右下角 logo</span><span class="ocr-tag">正常</span></div>
-                        </div>
-                    </div>
-                </div>
-            </div>
+            <!-- ASR/OCR 侧栏 -->
+            <div class="ref-side" id="ref-side"></div>
 
-            <!-- 中间：视频 -->
+            <!-- 视频 -->
             <div class="video-row">
                 <div class="video-block">
                     <div class="video-container">
@@ -144,364 +84,56 @@
                 </div>
             </div>
 
-            <!-- 右侧：工作区 -->
+            <!-- 工作区 -->
             <div class="center-right">
-            <!-- 卡片流（统一时间排序） -->
-            <div class="cards-flow-wrap">
-                <div class="flow-header">
-                    <div class="flow-title">
-                        风险点列表（按时间排序）
-                        <span style="font-size:11px;color:#999;font-weight:normal;">共 7 项</span>
-                    </div>
-                    <div class="filter-tabs">
-                        <span class="filter-tab active" data-filter="pending">待处理 <span class="badge-num" data-count="pending">6</span></span>
-                        <span class="filter-tab" data-filter="resolved">已解决 <span class="badge-num" data-count="resolved">1</span></span>
-                        <span class="filter-tab" data-filter="all">全部 <span class="badge-num" data-count="all">7</span></span>
-                        <span class="filter-tab" data-filter="text">画面文字 <span class="badge-num" data-count="text">2</span></span>
-                        <span class="filter-tab" data-filter="voice">语音文字 <span class="badge-num" data-count="voice">3</span></span>
-                        <span class="filter-tab" data-filter="scene">画面本身 <span class="badge-num" data-count="scene">2</span></span>
-                        <button class="btn btn-primary" id="accept-all-btn" style="padding:3px 10px;font-size:11px;margin-left:6px;background:#52c41a;border-color:#52c41a;" title="一键接受所有待处理项">✓ 全部接受</button>
-                        <button class="btn btn-primary" id="add-risk-btn" style="padding:3px 10px;font-size:11px;margin-left:6px;">+ 新增风险点</button>
-                    </div>
-                </div>
-                <div class="cards-flow" id="cards-flow">
-
-                    <!-- ===== Card #1 语音文字 ===== -->
-                    <div class="annot-card voice focus-current" data-id="card-1" data-type="voice">
-                        <div class="card-head">
-                            <span class="card-id">1</span>
-                            <span class="card-time" title="点击跳转到该时间">▶ 00:01-00:07</span>
-                            <span class="card-type-tag voice">语音文字</span>
-                            <span class="spacer"></span>
-                            <span class="expand-toggle">⚙ 修改分类</span>
+                <div class="cards-flow-wrap">
+                    <div class="flow-header">
+                        <div class="flow-title">
+                            风险点列表（按时间排序）
+                            <span style="font-size:11px;color:#999;font-weight:normal;">共 7 项</span>
                         </div>
-                        <div class="card-body">
-                            <div class="card-thumb"><img src="https://picsum.photos/seed/c1/64/64" alt=""></div>
-                            <div class="card-content">
-                                <div class="original-text">
-                                    <span class="label">ASR：</span>"你<span class="highlight">使使劲啊</span>，没有啥不可能的。<span class="highlight">三十分钟都做不到</span>的"
-                                </div>
-                                <div class="reason-row">
-                                    <span class="label">违规理由：</span>
-                                    <span class="reason-text">语音内容暗示壮阳功效，违反黑五类规则</span>
-                                    <span class="edit-icon" title="编辑（E）">✎</span>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="card-expand">
-                            <div class="expand-row">
-                                <span class="label">风险类型：</span>
-                                <select class="expand-select">
-                                    <option selected>语音文字</option>
-                                    <option>画面文字</option>
-                                    <option>画面本身</option>
-                                    <option>视频异常</option>
-                                </select>
-                            </div>
-                            <div class="expand-row">
-                                <span class="label">风险域：</span>
-                                <select class="expand-select" style="min-width:130px;">
-                                    <option selected>大模型精细化-严口径</option>
-                                    <option>禁推病症</option>
-                                </select>
-                                <select class="expand-select" style="min-width:90px;">
-                                    <option>低俗</option>
-                                    <option selected>黑五类</option>
-                                    <option>软色情</option>
-                                    <option>保证性承诺</option>
-                                </select>
-                            </div>
-                            <div class="expand-row">
-                                <span class="label">常用：</span>
-                                <div class="quick-tags">
-                                    <span class="quick-tag active">壮阳暗示</span>
-                                    <span class="quick-tag">疗效保证</span>
-                                    <span class="quick-tag">夸大功效</span>
-                                    <span class="quick-tag">软色情</span>
-                                    <span class="quick-tag combine">结合画面本身</span>
-                                    <span class="quick-tag combine">结合语音文字</span>
-                                    <span class="quick-tag combine">结合画面文字</span>
-                                </div>
-                            </div>
-                            <div class="expand-row">
-                                <span class="label">修改方向：</span>
-                                <input type="text" class="expand-input" value="去除"使劲""三十分钟"等暗示性词语">
-                            </div>
-                        </div>
-                        <div class="annot-actions">
-                            <button class="action-btn accept">✓ 接受</button>
-                            <button class="action-btn edit">✎ 编辑</button>
-                            <button class="action-btn reject">✗ 剔除</button>
-                            <span class="spacer"></span>
+                        <div class="filter-tabs">
+                            <span class="filter-tab active" data-filter="pending">待处理 <span class="badge-num" data-count="pending">6</span></span>
+                            <span class="filter-tab" data-filter="resolved">已解决 <span class="badge-num" data-count="resolved">1</span></span>
+                            <span class="filter-tab" data-filter="all">全部 <span class="badge-num" data-count="all">7</span></span>
+                            <span class="filter-tab" data-filter="text">画面文字 <span class="badge-num" data-count="text">2</span></span>
+                            <span class="filter-tab" data-filter="voice">语音文字 <span class="badge-num" data-count="voice">3</span></span>
+                            <span class="filter-tab" data-filter="scene">画面本身 <span class="badge-num" data-count="scene">2</span></span>
+                            <button class="btn btn-primary" id="accept-all-btn" style="padding:3px 10px;font-size:11px;margin-left:6px;background:#52c41a;border-color:#52c41a;" title="一键接受所有待处理项">✓ 全部接受</button>
+                            <button class="btn btn-primary" id="add-risk-btn" style="padding:3px 10px;font-size:11px;margin-left:6px;">+ 新增风险点</button>
                         </div>
                     </div>
-
-                    <!-- ===== Card #2 画面文字 ===== -->
-                    <div class="annot-card text" data-id="card-2" data-type="text">
-                        <div class="card-head">
-                            <span class="card-id">2</span>
-                            <span class="card-time" title="点击跳转">▶ 00:03-00:08</span>
-                            <span class="card-type-tag text">画面文字</span>
-                            <span class="spacer"></span>
-                            <span class="expand-toggle">⚙ 修改分类</span>
-                        </div>
-                        <div class="card-body">
-                            <div class="card-thumb"><img src="https://picsum.photos/seed/c2/64/64" alt=""></div>
-                            <div class="card-content">
-                                <div class="original-text">
-                                    <span class="label">OCR：</span>画面文字「<span class="highlight">按摩服务~看这里</span>、<span class="highlight">预约体检</span>」
-                                </div>
-                                <div class="reason-row">
-                                    <span class="label">违规理由：</span>
-                                    <span class="reason-text">画面文字暗示性服务，违反硬广严口径规则</span>
-                                    <span class="edit-icon" title="编辑（E）">✎</span>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="card-expand">
-                            <div class="expand-row">
-                                <span class="label">风险类型：</span>
-                                <select class="expand-select">
-                                    <option>语音文字</option>
-                                    <option selected>画面文字</option>
-                                    <option>画面本身</option>
-                                    <option>视频异常</option>
-                                </select>
-                            </div>
-                            <div class="expand-row">
-                                <span class="label">风险域：</span>
-                                <select class="expand-select" style="min-width:130px;">
-                                    <option selected>大模型精细化-严口径</option>
-                                </select>
-                                <select class="expand-select" style="min-width:90px;">
-                                    <option selected>低俗</option>
-                                    <option>软色情</option>
-                                </select>
-                            </div>
-                            <div class="expand-row">
-                                <span class="label">常用：</span>
-                                <div class="quick-tags">
-                                    <span class="quick-tag active">暗示性服务</span>
-                                    <span class="quick-tag">软色情</span>
-                                    <span class="quick-tag">违法医疗</span>
-                                    <span class="quick-tag combine">结合画面本身</span>
-                                    <span class="quick-tag combine">结合语音文字</span>
-                                    <span class="quick-tag combine">结合画面文字</span>
-                                </div>
-                            </div>
-                            <div class="expand-row">
-                                <span class="label">修改方向：</span>
-                                <input type="text" class="expand-input" value="移除暗示性文字（按摩服务、预约体检）">
-                            </div>
-                        </div>
-                        <div class="annot-actions">
-                            <button class="action-btn accept">✓ 接受</button>
-                            <button class="action-btn edit">✎ 编辑</button>
-                            <button class="action-btn reject">✗ 剔除</button>
-                        </div>
-                    </div>
-
-                    <!-- ===== Card #3 画面本身 ===== -->
-                    <div class="annot-card scene" data-id="card-3" data-type="scene">
-                        <div class="card-head">
-                            <span class="card-id">3</span>
-                            <span class="card-time" title="点击跳转">▶ 00:05-00:12</span>
-                            <span class="card-type-tag scene">画面本身</span>
-                            <span class="spacer"></span>
-                            <span class="expand-toggle">⚙ 修改分类</span>
-                        </div>
-                        <div class="card-body">
-                            <div class="card-thumb"><img src="https://picsum.photos/seed/c3/64/64" alt=""></div>
-                            <div class="card-content">
-                                <div class="original-text">
-                                    <span class="label">画面：</span>抽帧 #2 - 检测到<span class="highlight">蘑菇/植物特写</span>，疑似暗示性元素
-                                </div>
-                                <div class="reason-row">
-                                    <span class="label">违规理由：</span>
-                                    <span class="reason-text">画面出现蘑菇增长特写，疑似暗示性元素</span>
-                                    <span class="edit-icon" title="编辑（E）">✎</span>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="card-expand">
-                            <div class="expand-row">
-                                <span class="label">风险类型：</span>
-                                <select class="expand-select">
-                                    <option>语音文字</option>
-                                    <option>画面文字</option>
-                                    <option selected>画面本身</option>
-                                    <option>视频异常</option>
-                                </select>
-                            </div>
-                            <div class="expand-row">
-                                <span class="label">常用：</span>
-                                <div class="quick-tags">
-                                    <span class="quick-tag active">暗示元素</span>
-                                    <span class="quick-tag">软色情</span>
-                                    <span class="quick-tag">违规符号</span>
-                                    <span class="quick-tag combine">结合画面本身</span>
-                                    <span class="quick-tag combine">结合语音文字</span>
-                                    <span class="quick-tag combine">结合画面文字</span>
-                                </div>
-                            </div>
-                            <div class="expand-row">
-                                <span class="label">修改方向：</span>
-                                <input type="text" class="expand-input" value="替换为产品本身画面">
-                            </div>
-                        </div>
-                        <div class="annot-actions">
-                            <button class="action-btn accept">✓ 接受</button>
-                            <button class="action-btn edit">✎ 编辑</button>
-                            <button class="action-btn reject">✗ 剔除</button>
-                        </div>
-                    </div>
-
-                    <!-- ===== Card #4 语音文字（已接受） ===== -->
-                    <div class="annot-card voice confirmed" data-id="card-4" data-type="voice">
-                        <div class="card-head">
-                            <span class="card-id">4</span>
-                            <span class="card-time">▶ 00:11-00:16</span>
-                            <span class="card-type-tag voice">语音文字</span>
-                            <span class="spacer"></span>
-                        </div>
-                        <div class="card-body">
-                            <div class="card-thumb"><img src="https://picsum.photos/seed/c4/64/64" alt=""></div>
-                            <div class="card-content">
-                                <div class="original-text">
-                                    <span class="label">ASR：</span>"我们这是<span class="highlight">浓缩特效型</span>的，<span class="highlight">谁用谁知道</span>"
-                                </div>
-                                <div class="reason-row">
-                                    <span class="label">违规理由：</span>
-                                    <span class="reason-text">夸大产品功效，违反硬广严口径</span>
-                                    <span class="edit-icon">✎</span>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="annot-actions">
-                            <button class="action-btn edit">✎ 编辑</button>
-                            <button class="action-btn reject">↺ 撤销</button>
-                        </div>
-                    </div>
-
-                    <!-- ===== Card #5 画面文字 ===== -->
-                    <div class="annot-card text" data-id="card-5" data-type="text">
-                        <div class="card-head">
-                            <span class="card-id">5</span>
-                            <span class="card-time">▶ 00:22-00:26</span>
-                            <span class="card-type-tag text">画面文字</span>
-                            <span class="spacer"></span>
-                            <span class="expand-toggle">⚙ 修改分类</span>
-                        </div>
-                        <div class="card-body">
-                            <div class="card-thumb"><img src="https://picsum.photos/seed/c5/64/64" alt=""></div>
-                            <div class="card-content">
-                                <div class="original-text">
-                                    <span class="label">OCR：</span>画面文字「<span class="highlight">免费送</span>、<span class="highlight">最后一天</span>」
-                                </div>
-                                <div class="reason-row">
-                                    <span class="label">违规理由：</span>
-                                    <span class="reason-text">使用绝对化用语「最后一天」、虚假赠送</span>
-                                    <span class="edit-icon">✎</span>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="annot-actions">
-                            <button class="action-btn accept">✓ 接受</button>
-                            <button class="action-btn edit">✎ 编辑</button>
-                            <button class="action-btn reject">✗ 剔除</button>
-                        </div>
-                    </div>
-
-                    <!-- ===== Card #6 画面本身 ===== -->
-                    <div class="annot-card scene" data-id="card-6" data-type="scene">
-                        <div class="card-head">
-                            <span class="card-id">6</span>
-                            <span class="card-time">▶ 00:24-00:30</span>
-                            <span class="card-type-tag scene">画面本身</span>
-                            <span class="spacer"></span>
-                            <span class="expand-toggle">⚙ 修改分类</span>
-                        </div>
-                        <div class="card-body">
-                            <div class="card-thumb"><img src="https://picsum.photos/seed/c6/64/64" alt=""></div>
-                            <div class="card-content">
-                                <div class="original-text">
-                                    <span class="label">画面：</span>抽帧 #5 - 检测到<span class="highlight">服装暴露</span>，疑似软色情
-                                </div>
-                                <div class="reason-row">
-                                    <span class="label">违规理由：</span>
-                                    <span class="reason-text">主播服装可能违反平台软色情规则</span>
-                                    <span class="edit-icon">✎</span>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="annot-actions">
-                            <button class="action-btn accept">✓ 接受</button>
-                            <button class="action-btn edit">✎ 编辑</button>
-                            <button class="action-btn reject">✗ 剔除</button>
-                        </div>
-                    </div>
-
-                    <!-- ===== Card #7 语音文字 ===== -->
-                    <div class="annot-card voice" data-id="card-7" data-type="voice">
-                        <div class="card-head">
-                            <span class="card-id">7</span>
-                            <span class="card-time">▶ 00:26-00:32</span>
-                            <span class="card-type-tag voice">语音文字</span>
-                            <span class="spacer"></span>
-                            <span class="expand-toggle">⚙ 修改分类</span>
-                        </div>
-                        <div class="card-body">
-                            <div class="card-thumb"><img src="https://picsum.photos/seed/c7/64/64" alt=""></div>
-                            <div class="card-content">
-                                <div class="original-text">
-                                    <span class="label">ASR：</span>"现在下单<span class="highlight">免费送</span>，<span class="highlight">绝对最低价</span>"
-                                </div>
-                                <div class="reason-row">
-                                    <span class="label">违规理由：</span>
-                                    <span class="reason-text">使用绝对化用语「绝对最低价」</span>
-                                    <span class="edit-icon">✎</span>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="annot-actions">
-                            <button class="action-btn accept">✓ 接受</button>
-                            <button class="action-btn edit">✎ 编辑</button>
-                            <button class="action-btn reject">✗ 剔除</button>
-                        </div>
-                    </div>
-
+                    <div class="cards-flow" id="cards-flow"></div>
                 </div>
             </div>
-            <!-- /center-right -->
-
         </div>
-
     </div>
 
-    <!-- ============ 底部状态栏（fixed + 可隐藏） ============ -->
+    <!-- 底部状态栏 -->
     <div class="bottom-status" id="bottom-status">
-        <!-- 高频快捷键 -->
-        <span class="hint-group">
-            <span class="shortcut-hint"><span class="k green">A</span> 接受</span>
-            <span class="shortcut-hint"><span class="k red">D</span> 剔除</span>
-            <span class="shortcut-hint"><span class="k">E</span> 编辑</span>
-            <span class="shortcut-hint"><span class="k">↑↓</span> 切换</span>
-            <span class="shortcut-hint"><span class="k">?</span> 更多</span>
-        </span>
-
-        <!-- 右侧：进度 + 提交 -->
+        <div class="hint-group">
+            <span class="shortcut-btn green"><span class="k">A</span> 接受</span>
+            <span class="shortcut-btn red"><span class="k">D</span> 剔除</span>
+            <span class="shortcut-btn"><span class="k">E</span> 编辑</span>
+            <span class="shortcut-btn"><span class="k">↑↓</span> 切换</span>
+            <span class="shortcut-btn"><span class="k">?</span> 更多</span>
+        </div>
         <div class="progress-stat">
             <span class="stat-text" id="stat-text">已处理 <b id="stat-done">1</b> / <b id="stat-total">7</b> · 拒绝 <b id="stat-rej">0</b></span>
             <div class="progress-bar" title="绿色=已接受，灰色=已剔除">
                 <div class="fill-done" id="fill-done" style="width:14%;"></div>
                 <div class="fill-rej" id="fill-rej" style="left:14%;width:0%;"></div>
             </div>
-            <button class="btn btn-primary" style="padding:4px 16px;">提交 <kbd class="kbd">C</kbd></button>
+            <button class="btn btn-primary submit-btn">提交 <kbd class="kbd">C</kbd></button>
             <span class="toggle-collapse" id="bottom-status-collapse" title="隐藏底栏 (B)">▼</span>
         </div>
     </div>
     <button class="bottom-status-toggle" id="bottom-status-toggle" title="显示底栏 (B)">▲</button>
 
+    <script src="js/data.js"></script>
+    <script src="js/render.js"></script>
+    <script src="js/data.js"></script>
+    <script src="js/render.js"></script>
     <script src="js/state.js"></script>
     <script src="js/card-actions.js"></script>
     <script src="js/keyboard.js"></script>
@@ -510,6 +142,8 @@
     <script src="js/keyboard-events.js"></script>
     <script src="js/shortcut-modal.js"></script>
     <script src="js/card-add.js"></script>
+    <script src="js/menu.js"></script>
+    <script src="js/merge.js"></script>
     <script src="js/ui-utils.js"></script>
 </body>
 </html>
