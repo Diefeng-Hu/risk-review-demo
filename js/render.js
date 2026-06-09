@@ -98,12 +98,19 @@ function renderCard(c) {
 
     const expandToggle = !c.confirmed ? '<span class="expand-toggle">⚙ 修改分类</span>' : '';
 
+    const typeOptions = Object.entries(RISK_TYPE_MAP).map(([val, label]) =>
+        `<option value="${val}"${val === c.type ? ' selected' : ''}>${label}</option>`
+    ).join('');
+    const typeSelect = `<select class="card-type-select ${c.type}" data-id="${c.id}">
+        ${typeOptions}
+    </select>`;
+
     return `<!-- Card #${c.idx} ${typeLabel} -->
         <div class="annot-card ${c.type}${confirmedCls}${focusCls}" data-id="${c.id}" data-type="${c.type}">
             <div class="card-head">
                 <span class="card-id">${c.idx}</span>
                 <span class="card-time" title="点击跳转">▶ ${c.timeRange}</span>
-                <span class="card-type-tag ${c.type}">${typeLabel}</span>
+                ${typeSelect}
                 <span class="spacer"></span>
                 ${expandToggle}
             </div>
