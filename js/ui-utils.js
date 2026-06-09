@@ -52,3 +52,25 @@ function showFloatToast(msg) {
                 setBottomHidden(!bottomStatus.classList.contains('hidden'));
             }
         });
+
+        // 卡片头部类型下拉框 → 切换 card class + data-type
+        document.addEventListener('change', e => {
+            const sel = e.target.closest('.card-type-select');
+            if (!sel) return;
+            const card = sel.closest('.annot-card');
+            if (!card) return;
+            const oldType = card.dataset.type;
+            const newType = sel.value;
+            const typeLabel = { voice: '语音文字', text: '画面文字', scene: '画面本身', abnormal: '视频异常' };
+            card.classList.remove(oldType);
+            card.classList.add(newType);
+            card.dataset.type = newType;
+            sel.className = `card-type-select ${newType}`;
+            // 同步展开区的风险类型 select（如果存在）
+            const expSel = card.querySelector('.expand-select.type-select');
+            if (expSel) expSel.value = newType;
+            // 同步 ASR/OCR 行的颜色
+            renderVideoSegments?.();
+            updateBadgeCounts?.();
+            showFloatToast?.(`已切换为 ${typeLabel[newType] || newType}`);
+        });
